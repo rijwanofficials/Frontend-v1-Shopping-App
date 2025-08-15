@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router";
 
 const Navbar = () => {
-    const [searchText, setsearchText] = useState("");
+    const [query] = useSearchParams();
+    const searchTextDefaultValue = query.get("q") || "";
+
+
+    const [searchText, setsearchText] = useState(searchTextDefaultValue);
+
     const navigate = useNavigate();
     const handleSearchText = (e) => {
         setsearchText(e.target.value);
