@@ -1,10 +1,10 @@
-import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { Bounce, toast } from 'react-toastify';
 
 
 const ShowErrorToast = (txt) => {
     toast.error(txt, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: false,
         pauseOnHover: true,
@@ -18,7 +18,7 @@ const ShowErrorToast = (txt) => {
 const ShowSuccessToast = (txt) => {
     toast.success(txt, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: false,
         pauseOnHover: true,

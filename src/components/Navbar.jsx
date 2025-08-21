@@ -18,7 +18,9 @@ const Navbar = () => {
     }
     return (
         <div className="p-6 bg-pink-950 flex items-center justify-between gap-4 w-full text-white">
-            <div className="text-xl font-bold">My Shopping App</div>
+            <div className="text-xl font-bold">
+                <Link to='/'>My Shopping App</Link>
+            </div>
             <div className="flex items-center gap-2">
                 {/* controlled component */}
                 <input
@@ -33,11 +35,11 @@ const Navbar = () => {
                     Search
                 </button>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 text-xl">
                 <Link to="/" className="hover:underline">
                     Home
                 </Link>
-                <Link to="/login" className="hover:underline">
+                <Link to="/login" className="hover:underline text-xl">
                     Log In
                 </Link>
             </div>

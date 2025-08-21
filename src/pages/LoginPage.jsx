@@ -1,16 +1,103 @@
 import { Link } from "react-router";
 import Navbar from "../components/Navbar";
+import { ShowErrorToast, ShowSuccessToast } from "../utils/ToastMessageHelper";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
-const LoginPage = () => {
+const LoginPage = ({ setUser }) => {
+    const [isLoading, setIsLoading] = useState(false); // for button loading state
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // track login status
+    const [email, setEmail] = useState(""); // store logged-in email
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            setIsLoading(true);
+            const email = e.target.email.value;
+            const password = e.target.password.value;
+
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/Login`, {
+                method: "POST",
+                body: JSON.stringify({ email, password }),
+                headers: { "Content-Type": "application/json" },
+            });
+
+            if (response.status === 201) {
+                ShowSuccessToast("User Logged In Successfully");
+                setEmail(email);
+                setIsLoggedIn(true);
+                setUser({ isLoggedIn: true });
+            } else {
+                const result = await response.json();
+                ShowErrorToast(result.message);
+            }
+        } catch (err) {
+            console.error("Error in handleLogin:", err.message);
+            ShowErrorToast(`Unable to Login: ${err.message}`);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            const timer = setTimeout(() => {
+                navigate("/");
+            }, 4000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [isLoggedIn, navigate]);
+
     return (
-        <>
+        <div>
             <Navbar />
-            <div className="text-2xl m-5 flex flex-col justify-center items-center">
-                <div>Login Page</div>
-            </div>
-            <Link to="/signup" className="text-xl text-blue-600 underline flex justify-center items-center">Signup Page</Link>
-        </>
-    )
+            {!isLoggedIn ? (
+                <form onSubmit={handleSubmit}>
+                    <div className="text-xl flex flex-col gap-3 justify-center items-center w-fit h-fit mx-auto px-5 py-15 bg-white/10 shadow-md mt-20 rounded-lg">
+                        <div className="flex gap-1 flex-col">
+                            <label>Email</label>
+                            <input
+                                className="border-2 border-gray-400/70 focus:outline-none focus:border-pink-600 rounded-md px-2 py-1 w-85 placeholder-gray-400"
+                                type="email"
+                                name="email"
+                                placeholder="Enter your email"
+                                required
+                            />
+                        </div>
+                        <div className="flex gap-1 flex-col">
+                            <label>Password</label>
+                            <input
+                                className="border-2 border-gray-400/70 focus:outline-none focus:border-pink-600 rounded-md px-2 py-1 w-85 placeholder-gray-400"
+                                type="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                required
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="text-white cursor-pointer w-full py-2 rounded-md bg-pink-950 hover:bg-pink-700 transition"
+                        >
+                            {isLoading ? "Logging..." : "Log In"}
+                        </button>
+                        <p className="text-sm text-gray-700 mt-3 text-center">
+                            Don’t have an account?{" "}
+                            <Link to="/signup" className="text-blue-600 hover:underline">
+                                Sign Up
+                            </Link>
+                        </p>
+                    </div>
+                </form>
+            ) : (
+                <div className="flex flex-col justify-center items-center gap-5 mt-20 bg-white/10 shadow-md rounded-xl w-fit h-fit mx-auto py-10 px-10">
+                    <h1 className="text-xl font-medium">Welcome Back!</h1>
+                    <p className="text-xl font-bold text-pink-900">{email}</p>
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default LoginPage;
