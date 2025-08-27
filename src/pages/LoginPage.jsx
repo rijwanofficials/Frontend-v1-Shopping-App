@@ -21,15 +21,19 @@ const LoginPage = ({ setUser }) => {
                 method: "POST",
                 body: JSON.stringify({ email, password }),
                 headers: { "Content-Type": "application/json" },
+                credentials: "include",
             });
 
+            const result = await response.json();
             if (response.status === 201) {
                 ShowSuccessToast("User Logged In Successfully");
                 setEmail(email);
                 setIsLoggedIn(true);
-                setUser({ isLoggedIn: true });
+                setUser({
+                    isLoggedIn: true,
+                    ...result.data,
+                });
             } else {
-                const result = await response.json();
                 ShowErrorToast(result.message);
             }
         } catch (err) {
@@ -39,7 +43,6 @@ const LoginPage = ({ setUser }) => {
             setIsLoading(false);
         }
     };
-
     useEffect(() => {
         if (isLoggedIn) {
             const timer = setTimeout(() => {
@@ -49,7 +52,6 @@ const LoginPage = ({ setUser }) => {
             return () => clearTimeout(timer);
         }
     }, [isLoggedIn, navigate]);
-
     return (
         <div>
             <Navbar />

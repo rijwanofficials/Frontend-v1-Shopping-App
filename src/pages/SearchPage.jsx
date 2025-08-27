@@ -16,12 +16,10 @@ const SearchPage = () => {
     const getAllProducts = async () => {
         try {
             setLoading(true);
-            console.log("Fetching products for search:", searchText);
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/products?q=${searchText}&limit=${LIMIT_PER_PAGE}&page=${page}`, {
                 method: "GET",
             });
             const result = await response.json();
-            console.log("----API returned----:", result);
             setTotal(result.data.total);
             setproducts(result.data.products);
         }
