@@ -18,6 +18,7 @@ const SearchPage = () => {
             setLoading(true);
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/products?q=${searchText}&limit=${LIMIT_PER_PAGE}&page=${page}`, {
                 method: "GET",
+                credentials: "include",
             });
             const result = await response.json();
             setTotal(result.data.total);

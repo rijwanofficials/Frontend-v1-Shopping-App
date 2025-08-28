@@ -23,8 +23,7 @@ const LoginPage = ({ setUser }) => {
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
             });
-
-            const result = await response.json();
+            const result = await response.json(); 
             if (response.status === 201) {
                 ShowSuccessToast("User Logged In Successfully");
                 setEmail(email);
