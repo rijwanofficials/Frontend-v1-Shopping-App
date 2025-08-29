@@ -57,6 +57,9 @@ const App = () => {
         <Routes>
           <Route path="/login" element={<LoginPage setUser={setUser} />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/view/:id" element={<ViewPage />} />
           <Route path="/*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
@@ -67,7 +70,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<SearchPage />} />
-        <Route path="/view/:productId" element={<ViewPage />} />
+        <Route path="/view/:id" element={<ViewPage />} />
         <Route path="/login" element={<LoginPage setUser={setUser} />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/*" element={<PageNotFound />} />

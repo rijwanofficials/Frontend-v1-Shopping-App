@@ -1,5 +1,5 @@
 import { ClipLoader } from "react-spinners";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { Paginator } from "../components/Paginator";
@@ -11,6 +11,7 @@ const SearchPage = () => {
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
     const searchText = query.get("q") || "";
+    const navigate = useNavigate();
     console.log(searchText);
     const LIMIT_PER_PAGE = 10
     const getAllProducts = async () => {
@@ -34,6 +35,10 @@ const SearchPage = () => {
     useEffect(() => {
         getAllProducts();
     }, [searchText, page])
+
+    const handleViewProduct = (id) => {
+        navigate(`/view/${id}`)
+    }
     return (
         <>
             <Navbar />
@@ -47,11 +52,13 @@ const SearchPage = () => {
                         <div className="w-64 bg-blue-100 p-3 rounded-lg shadow-md">
                             <h2 className="text-lg font-bold mb-2">Filters</h2>
                         </div>
-                        <div className="flex-1 flex flex-col bg-emerald-100 gap-5 p-3 rounded-lg shadow-md">
-                            {products?.map((elem) => (
-                                <div
+                        <div className="flex-1 flex flex-col gap-5 p-3 rounded-lg shadow-md">
+                            {products?.map((elem) => {
+                                return <div
                                     key={elem._id}
-                                    className=" flex text-2xl p-5 border-2 border-amber-600 rounded-xl"
+                                    className=" flex text-2xl p-5 border-2 border-amber-600 rounded-xl gap-5 cursor-pointer hover:scale-102 transition-transform"
+                                    role="button"
+                                    onClick={() => handleViewProduct(elem._id)}
                                 >
                                     <div className="w-50 h-50">
                                         <img src={elem.images?.[0]} alt={elem.title} className="w-full" />
@@ -62,7 +69,7 @@ const SearchPage = () => {
                                         <p>In stock: {elem.quantity}</p>
                                     </div>
                                 </div>
-                            ))}
+                            })}
                             {products?.length === 0 && (
                                 <>
                                     <p className="text-2xl font-bold text-emerald-600 text-center mt-5">
@@ -84,10 +91,7 @@ const SearchPage = () => {
                             handlePageClick={(val) => setPage(val)}
                         />
                     </div>
-
-
                 </>
-
             )}
         </>
     )
