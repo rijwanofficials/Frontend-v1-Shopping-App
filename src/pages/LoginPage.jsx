@@ -3,13 +3,17 @@ import Navbar from "../components/Navbar";
 import { ShowErrorToast, ShowSuccessToast } from "../utils/ToastMessageHelper";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { useSearchParams } from "react-router";
+import { useAuthContext } from "../Context/AppContext";
 
-const LoginPage = ({ setUser }) => {
+
+const LoginPage = () => {
     const [isLoading, setIsLoading] = useState(false); // for button loading state
     const [isLoggedIn, setIsLoggedIn] = useState(false); // track login status
     const [email, setEmail] = useState(""); // store logged-in email
     const navigate = useNavigate();
-
+    const [searchParams] = useSearchParams();
+    const { handleSetUser } = useAuthContext();
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -23,15 +27,18 @@ const LoginPage = ({ setUser }) => {
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
             });
-            const result = await response.json(); 
+            const result = await response.json();
             if (response.status === 201) {
                 ShowSuccessToast("User Logged In Successfully");
                 setEmail(email);
                 setIsLoggedIn(true);
-                setUser({
+                handleSetUser({
                     isLoggedIn: true,
                     ...result.data,
                 });
+
+                const redirectTo = searchParams.get("redirect") || "/";
+                navigate(redirectTo, { replace: true });
             } else {
                 ShowErrorToast(result.message);
             }

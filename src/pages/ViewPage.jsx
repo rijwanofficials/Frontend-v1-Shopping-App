@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { ClipLoader } from "react-spinners";
+import { Button } from "../components/ui/button";
+import { ShowErrorToast, ShowSuccessToast } from "../utils/ToastMessageHelper";
+import { useAuthContext } from "../Context/AppContext";
 
 const ViewPage = () => {
     const [loading, setLoading] = useState(false);
     const [productsInfo, setProductsInfo] = useState(null);
     const { id } = useParams();
+    const navigate = useNavigate();
+    const { isLoggedIn } = useAuthContext();
+    console.log(isLoggedIn);
     console.log("🟢 Product ID from route:", id);
     const viewProducts = async () => {
         try {
@@ -38,6 +44,18 @@ const ViewPage = () => {
         viewProducts();
     }, [id]);
 
+    const handleAddToCart = () => {
+        if (isLoggedIn) {
+            ShowSuccessToast("Product is added to the cart");
+            // add to cart functionality
+        }
+        else {
+            ShowErrorToast("Please log in to add products to the cart");
+            // redirecting user after logged in
+            navigate(`/login?redirect=/view/${id}`);
+        }
+    }
+
     return (
         <>
             <Navbar />
@@ -49,7 +67,13 @@ const ViewPage = () => {
                 <div>
                     <h1>Here is your product</h1>
                     {productsInfo ? (
-                        <pre>{JSON.stringify(productsInfo, null, 2)}</pre>
+                        <>
+                            <pre>{JSON.stringify(productsInfo, null, 2)}</pre>
+                            <div className="flex items-center p-5">
+                                <Button onClick={handleAddToCart}> Add to Cart</Button>
+                            </div>
+                        </>
+
                     ) : (
                         <p>No product found</p>
                     )}

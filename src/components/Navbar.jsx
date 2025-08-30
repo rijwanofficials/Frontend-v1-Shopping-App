@@ -1,17 +1,16 @@
 import { useState } from "react";
-import { Link, Navigate, useNavigate, useSearchParams } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
+import { Button } from "./ui/button";
+import { useAuthContext } from "../Context/AppContext";
 
 const Navbar = () => {
     const [query] = useSearchParams();
     const searchTextDefaultValue = query.get("q") || "";
-
-
     const [searchText, setsearchText] = useState(searchTextDefaultValue);
-
+    const { isLoggedIn } = useAuthContext();
     const navigate = useNavigate();
     const handleSearchText = (e) => {
         setsearchText(e.target.value);
-        console.log("vlaue-->", searchText);
     }
     const handleSearchPage = () => {
         navigate(`/search?q=${searchText}`)
@@ -22,7 +21,6 @@ const Navbar = () => {
                 <Link to='/'>My Shopping App</Link>
             </div>
             <div className="flex items-center gap-2">
-                {/* controlled component */}
                 <input
                     value={searchText}
                     onChange={handleSearchText}
@@ -39,9 +37,16 @@ const Navbar = () => {
                 <Link to="/" className="hover:underline">
                     Home
                 </Link>
-                <Link to="/login" className="hover:underline text-xl">
-                    Log In
-                </Link>
+                {isLoggedIn ? (
+                    <Button>
+                        Logout
+                    </Button>
+                ) : (
+                    <Link to="/login" className="hover:underline text-xl">
+                        Log In
+                    </Link>
+                )
+                }
             </div>
         </div>
     );
