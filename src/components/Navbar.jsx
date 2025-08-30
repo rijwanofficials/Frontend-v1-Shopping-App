@@ -7,7 +7,7 @@ const Navbar = () => {
     const [query] = useSearchParams();
     const searchTextDefaultValue = query.get("q") || "";
     const [searchText, setsearchText] = useState(searchTextDefaultValue);
-    const { isLoggedIn } = useAuthContext();
+    const { isLoggedIn, handleLogOutClick } = useAuthContext();
     const navigate = useNavigate();
     const handleSearchText = (e) => {
         setsearchText(e.target.value);
@@ -38,7 +38,7 @@ const Navbar = () => {
                     Home
                 </Link>
                 {isLoggedIn ? (
-                    <Button>
+                    <Button onClick={handleLogOutClick}>
                         Logout
                     </Button>
                 ) : (
