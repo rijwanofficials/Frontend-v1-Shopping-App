@@ -9,6 +9,8 @@ import { useAuthContext } from "../Context/AppContext";
 const ViewPage = () => {
     const [loading, setLoading] = useState(false);
     const [productsInfo, setProductsInfo] = useState(null);
+    const [frame, setFrame] = useState(0);
+
     const { id } = useParams();
     const navigate = useNavigate();
     const { isLoggedIn } = useAuthContext();
@@ -31,8 +33,8 @@ const ViewPage = () => {
             }
 
             const result = await response.json();
-            console.log("✅ API result:", result);
             setProductsInfo(result.data.product);
+            console.log("✅ setProductsInfo:", result.data.product);
         } catch (err) {
             console.error("Error fetching product:", err);
         } finally {
@@ -64,16 +66,71 @@ const ViewPage = () => {
                     <ClipLoader size={100} />
                 </div>
             ) : (
-                <div>
-                    <h1>Here is your product</h1>
+                <div className="px-4"> {/* padding to prevent edge overflow */}
                     {productsInfo ? (
                         <>
-                            <pre>{JSON.stringify(productsInfo, null, 2)}</pre>
-                            <div className="flex items-center p-5">
-                                <Button onClick={handleAddToCart}> Add to Cart</Button>
+                            <p className="text-center mt-5 mb-5 text-2xl font-semibold">
+                                {productsInfo.title}
+                            </p>
+
+                            {/* Main Image with < > Controls */}
+                            <div className="relative bg-white shadow-md rounded-xl p-4 max-w-2xl mx-auto flex justify-center items-center overflow-hidden">
+                                {/* Left Icon */}
+                                <span
+                                    onClick={() =>
+                                        setFrame(
+                                            (prev) =>
+                                                (prev - 1 + productsInfo.images.length) %
+                                                productsInfo.images.length
+                                        )
+                                    }
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 text-2xl font-bold text-gray-600 cursor-pointer hover:text-black"
+                                >
+                                    {"<"}
+                                </span>
+
+                                {/* Main Image */}
+                                <img
+                                    src={productsInfo.images[frame]}
+                                    alt={productsInfo.title}
+                                    className="w-full max-h-[400px] object-contain rounded-lg shadow-sm"
+                                />
+
+                                {/* Right Icon */}
+                                <span
+                                    onClick={() =>
+                                        setFrame((prev) => (prev + 1) % productsInfo.images.length)
+                                    }
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-2xl font-bold text-gray-600 cursor-pointer hover:text-black"
+                                >
+                                    {">"}
+                                </span>
+                            </div>
+
+                            {/* Thumbnails */}
+                            <div className="flex gap-3 mt-4 overflow-x-auto justify-center max-w-2xl mx-auto">
+                                {productsInfo.images?.map((img, i) => (
+                                    <img
+                                        key={i}
+                                        src={img}
+                                        alt={`${productsInfo.title}-${i}`}
+                                        onClick={() => setFrame(i)}
+                                        className={`w-20 h-20 object-contain border rounded-lg cursor-pointer transition-transform ${frame === i ? "border-blue-500 scale-105" : "hover:scale-105"
+                                            }`}
+                                    />
+                                ))}
+                            </div>
+
+                            {/* Add to Cart Button */}
+                            <div className="flex items-center justify-center p-5">
+                                <Button
+                                    onClick={handleAddToCart}
+                                    className="px-8 py-4 text-lg rounded-xl"
+                                >
+                                    Add to Cart
+                                </Button>
                             </div>
                         </>
-
                     ) : (
                         <p>No product found</p>
                     )}
@@ -81,6 +138,8 @@ const ViewPage = () => {
             )}
         </>
     );
+
+
 };
 
 export default ViewPage;
