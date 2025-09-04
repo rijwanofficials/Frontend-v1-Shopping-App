@@ -1,6 +1,5 @@
 import { ClipLoader } from "react-spinners";
 import { useNavigate, useSearchParams } from "react-router";
-import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { Paginator } from "../components/Paginator";
 
@@ -41,7 +40,6 @@ const SearchPage = () => {
     }
     return (
         <>
-            <Navbar />
             {loading ? (
                 <div className="flex justify-center items-center min-h-screen">
                     <ClipLoader size={150} />

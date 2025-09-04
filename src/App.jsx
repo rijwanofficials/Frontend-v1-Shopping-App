@@ -6,10 +6,11 @@ import PageNotFound from "./pages/PageNotFound";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import { ClipLoader } from "react-spinners";
-import {  useAuthContext } from "./Context/AppContext";
+import { useAuthContext } from "./Context/AppContext";
+import { BasicLayout } from "./pages/BasicLayout";
 
 
-const App = () => { 
+const App = () => {
   const { apploading, isLoggedIn } = useAuthContext();
 
   if (apploading) {
@@ -19,29 +20,31 @@ const App = () => {
   }
   if (!isLoggedIn) {
     return (
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/" element={<HomePage />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/view/:id" element={<ViewPage />} />
-            <Route path="/*" element={<PageNotFound />} />
-          </Routes>
-        </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/view/:id" element={<ViewPage />} />
+          <Route path="/*" element={<PageNotFound />} />
+        </Routes>
+      </BrowserRouter>
     );
   }
   return (
-      <BrowserRouter>
-        <Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<BasicLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/view/:id" element={<ViewPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/*" element={<PageNotFound />} />
-        </Routes>
-      </BrowserRouter>
+        </Route>
+        <Route path="/*" element={<PageNotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

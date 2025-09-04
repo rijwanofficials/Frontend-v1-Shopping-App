@@ -61,7 +61,6 @@ export default function Signup() {
 
     return (
         <div>
-            <Navbar />
             {!islogin ? (
                 <div className="flex justify-center items-center py-10">
                     <div className="bg-white/10 shadow-md rounded-md w-fit h-fit mx-auto px-5 py-15">

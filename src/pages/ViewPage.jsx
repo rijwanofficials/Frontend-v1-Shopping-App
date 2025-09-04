@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import { useNavigate, useParams } from "react-router";
 import { ClipLoader } from "react-spinners";
 import { Button } from "../components/ui/button";
@@ -13,9 +12,8 @@ const ViewPage = () => {
 
     const { id } = useParams();
     const navigate = useNavigate();
-    const { isLoggedIn } = useAuthContext();
+    const { isLoggedIn, addtoCart, cart } = useAuthContext();
     console.log(isLoggedIn);
-    console.log("🟢 Product ID from route:", id);
     const viewProducts = async () => {
         try {
             setLoading(true);
@@ -48,34 +46,31 @@ const ViewPage = () => {
 
     const handleAddToCart = () => {
         if (isLoggedIn) {
-            ShowSuccessToast("Product is added to the cart");
-            // add to cart functionality
+            addtoCart(productsInfo._id);
         }
         else {
             ShowErrorToast("Please log in to add products to the cart");
-            // redirecting user after logged in
             navigate(`/login?redirect=/view/${id}`);
         }
     }
 
+    const currentItem = cart[id]
+
     return (
         <>
-            <Navbar />
+
             {loading ? (
                 <div className="h-screen flex items-center justify-center">
                     <ClipLoader size={100} />
                 </div>
             ) : (
-                <div className="px-4"> {/* padding to prevent edge overflow */}
+                <div className="px-4">
                     {productsInfo ? (
                         <>
                             <p className="text-center mt-5 mb-5 text-2xl font-semibold">
                                 {productsInfo.title}
                             </p>
-
-                            {/* Main Image with < > Controls */}
                             <div className="relative bg-white shadow-md rounded-xl p-4 max-w-2xl mx-auto flex justify-center items-center overflow-hidden">
-                                {/* Left Icon */}
                                 <span
                                     onClick={() =>
                                         setFrame(
@@ -88,15 +83,11 @@ const ViewPage = () => {
                                 >
                                     {"<"}
                                 </span>
-
-                                {/* Main Image */}
                                 <img
                                     src={productsInfo.images[frame]}
                                     alt={productsInfo.title}
                                     className="w-full max-h-[400px] object-contain rounded-lg shadow-sm"
                                 />
-
-                                {/* Right Icon */}
                                 <span
                                     onClick={() =>
                                         setFrame((prev) => (prev + 1) % productsInfo.images.length)
@@ -106,8 +97,6 @@ const ViewPage = () => {
                                     {">"}
                                 </span>
                             </div>
-
-                            {/* Thumbnails */}
                             <div className="flex gap-3 mt-4 overflow-x-auto justify-center max-w-2xl mx-auto">
                                 {productsInfo.images?.map((img, i) => (
                                     <img
@@ -120,15 +109,25 @@ const ViewPage = () => {
                                     />
                                 ))}
                             </div>
-
-                            {/* Add to Cart Button */}
                             <div className="flex items-center justify-center p-5">
-                                <Button
-                                    onClick={handleAddToCart}
-                                    className="px-8 py-4 text-lg rounded-xl"
-                                >
-                                    Add to Cart
-                                </Button>
+
+
+                                {currentItem ? (
+                                    <div className="flex gap-1">
+                                        <Button variant="outline-primary" >-</Button>
+                                        <p className="border-1 rounded-2xl px-7"> {currentItem.cartQuantity}</p>
+                                        <Button variant="outline-primary"
+                                            onClick={handleAddToCart} >+</Button>
+                                    </div>
+                                ) : (
+                                    <Button
+                                        onClick={handleAddToCart}
+                                        className="px-8 py-4 text-lg rounded-xl"
+                                    >
+                                        Add to Cart
+                                    </Button>
+                                )
+                                }
                             </div>
                         </>
                     ) : (

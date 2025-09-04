@@ -5,6 +5,7 @@ const AuthContext = createContext();
 const AppContextProvider = ({ children }) => {
     const [user, setUser] = useState({ isLoggedIn: false });
     const [apploading, setappLoading] = useState(true);
+    const [cart, setCart] = useState({});   //productId
 
     const { isLoggedIn } = user;
 
@@ -54,9 +55,23 @@ const AppContextProvider = ({ children }) => {
             setappLoading(false);
         }
     }
-    // const addtoCart = () => {
-    //     setCart(...)
-    // }
+    const addtoCart = async (productId) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/cart/${productId}`, {
+                method: "POST",
+                credentials: "include"
+            })
+            if (response.status == 200) {
+                ShowSuccessToast("Product is added to cart")
+            }
+            console.log("response", response);
+        }
+
+        catch (err) {
+            ShowErrorToast(`Error in Adding to Cart, ${err.message}`);
+
+        }
+    }
 
     // const removetheCart = () => {
     //     setCart(...)
@@ -68,7 +83,9 @@ const AppContextProvider = ({ children }) => {
         isLoggedIn,
         user,
         handleSetUser,
-        handleLogOutClick
+        handleLogOutClick,
+        cart,
+        addtoCart
     };
 
     return <AuthContext.Provider value={sharedValues}>{children}</AuthContext.Provider>;

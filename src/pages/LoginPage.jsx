@@ -60,7 +60,6 @@ const LoginPage = () => {
     }, [isLoggedIn, navigate]);
     return (
         <div>
-            <Navbar />
             {!isLoggedIn ? (
                 <form onSubmit={handleSubmit}>
                     <div className="text-xl flex flex-col gap-3 justify-center items-center w-fit h-fit mx-auto px-5 py-15 bg-white/10 shadow-md mt-20 rounded-lg">

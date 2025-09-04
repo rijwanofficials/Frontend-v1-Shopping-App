@@ -1,8 +1,9 @@
 import { Link } from "react-router";
 import Navbar from "../components/Navbar"
+import { useAuthContext } from "../Context/AppContext";
 
-const PageNotFound = (user) => {
-    const { isLoggedIn } = user
+const PageNotFound = () => {
+    const { isLoggedIn } = useAuthContext();
     return (
         <>
             <Navbar />
