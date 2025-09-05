@@ -1,38 +1,34 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { ClipLoader } from "react-spinners";
 import { Button } from "../components/ui/button";
-import { ShowErrorToast, ShowSuccessToast } from "../utils/ToastMessageHelper";
+import { ShowErrorToast } from "../utils/ToastMessageHelper";
 import { useAuthContext } from "../Context/AppContext";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 const ViewPage = () => {
     const [loading, setLoading] = useState(false);
     const [productsInfo, setProductsInfo] = useState(null);
     const [frame, setFrame] = useState(0);
+    const [addingToCart, setAddingToCart] = useState(false);
 
     const { id } = useParams();
     const navigate = useNavigate();
     const { isLoggedIn, addtoCart, cart } = useAuthContext();
-    console.log(isLoggedIn);
+
+    // Fetch product details
     const viewProducts = async () => {
         try {
             setLoading(true);
             const response = await fetch(
                 `${import.meta.env.VITE_BACKEND_URL}/products/view/${id}`,
-                {
-                    method: "GET",
-                    credentials: "include",
-                }
+                { method: "GET", credentials: "include" }
             );
-
             if (!response.ok) {
                 console.error("Failed to fetch product:", response.status);
                 return;
             }
-
             const result = await response.json();
             setProductsInfo(result.data.product);
-            console.log("✅ setProductsInfo:", result.data.product);
         } catch (err) {
             console.error("Error fetching product:", err);
         } finally {
@@ -44,101 +40,131 @@ const ViewPage = () => {
         viewProducts();
     }, [id]);
 
-    const handleAddToCart = () => {
-        if (isLoggedIn) {
-            addtoCart(productsInfo._id);
-        }
-        else {
+    // Handle add to cart
+    const handleAddToCart = async () => {
+        if (!isLoggedIn) {
             ShowErrorToast("Please log in to add products to the cart");
             navigate(`/login?redirect=/view/${id}`);
+            return;
         }
-    }
+        try {
+            setAddingToCart(true);
+            await addtoCart(productsInfo._id);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setAddingToCart(false);
+        }
+    };
 
-    const currentItem = cart[id]
+    // Find if product is already in cart
+    const currentItem = Object.values(cart).find(
+        (item) => item.productId?._id === productsInfo?._id
+    );
 
     return (
         <>
-
             {loading ? (
-                <div className="h-screen flex items-center justify-center">
-                    <ClipLoader size={100} />
+                <div className="px-4 py-6 animate-pulse space-y-4">
+                    {/* Product Title Skeleton */}
+                    <div className="h-8 bg-gray-300 rounded w-3/4 mx-auto"></div>
+
+                    {/* Main Image Skeleton */}
+                    <div className="relative w-full max-w-md mx-auto bg-gray-200 rounded-lg h-60 sm:h-80 flex items-center justify-center">
+                        <div className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-300 rounded-full"></div>
+                        <div className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-300 rounded-full"></div>
+                    </div>
+
+                    {/* Thumbnails Skeleton */}
+                    <div className="flex flex-wrap justify-center gap-3 mt-3">
+                        {Array.from({ length: 4 }).map((_, i) => (
+                            <div key={i} className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-300 rounded-lg"></div>
+                        ))}
+                    </div>
+
+                    {/* Add to Cart Skeleton */}
+                    <div className="flex justify-center mt-6 gap-2">
+                        <div className="w-10 h-10 bg-gray-300 rounded"></div>
+                        <div className="w-16 h-10 bg-gray-300 rounded"></div>
+                        <div className="w-10 h-10 bg-gray-300 rounded"></div>
+                    </div>
                 </div>
             ) : (
                 <div className="px-4">
                     {productsInfo ? (
                         <>
-                            <p className="text-center mt-5 mb-5 text-2xl font-semibold">
-                                {productsInfo.title}
-                            </p>
-                            <div className="relative bg-white shadow-md rounded-xl p-4 max-w-2xl mx-auto flex justify-center items-center overflow-hidden">
-                                <span
-                                    onClick={() =>
-                                        setFrame(
-                                            (prev) =>
-                                                (prev - 1 + productsInfo.images.length) %
-                                                productsInfo.images.length
-                                        )
-                                    }
-                                    className="absolute left-3 top-1/2 -translate-y-1/2 text-2xl font-bold text-gray-600 cursor-pointer hover:text-black"
-                                >
-                                    {"<"}
-                                </span>
-                                <img
-                                    src={productsInfo.images[frame]}
-                                    alt={productsInfo.title}
-                                    className="w-full max-h-[400px] object-contain rounded-lg shadow-sm"
-                                />
-                                <span
-                                    onClick={() =>
-                                        setFrame((prev) => (prev + 1) % productsInfo.images.length)
-                                    }
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-2xl font-bold text-gray-600 cursor-pointer hover:text-black"
-                                >
-                                    {">"}
-                                </span>
-                            </div>
-                            <div className="flex gap-3 mt-4 overflow-x-auto justify-center max-w-2xl mx-auto">
-                                {productsInfo.images?.map((img, i) => (
+                            {/* Product Title */}
+                            <p className="text-center mt-5 mb-5 text-2xl font-semibold">{productsInfo.title}</p>
+
+                            {/* Product Images */}
+                            <div className="flex flex-col items-center gap-4 max-w-md mx-auto">
+                                <div className="relative w-full bg-white shadow rounded-lg p-2 flex justify-center items-center">
+                                    <button
+                                        onClick={() =>
+                                            setFrame((prev) => (prev - 1 + productsInfo.images.length) % productsInfo.images.length)
+                                        }
+                                        className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-pink-600 transition"
+                                    >
+                                        <HiChevronLeft size={35} />
+                                    </button>
+
                                     <img
-                                        key={i}
-                                        src={img}
-                                        alt={`${productsInfo.title}-${i}`}
-                                        onClick={() => setFrame(i)}
-                                        className={`w-20 h-20 object-contain border rounded-lg cursor-pointer transition-transform ${frame === i ? "border-blue-500 scale-105" : "hover:scale-105"
-                                            }`}
+                                        src={productsInfo.images[frame]}
+                                        alt={productsInfo.title}
+                                        className="w-full max-h-[240px] sm:max-h-[320px] object-contain rounded-md"
                                     />
-                                ))}
+
+                                    <button
+                                        onClick={() => setFrame((prev) => (prev + 1) % productsInfo.images.length)}
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-pink-600 transition"
+                                    >
+                                        <HiChevronRight size={35} />
+                                    </button>
+                                </div>
+
+                                {/* Thumbnails */}
+                                <div className="flex flex-wrap justify-center gap-3 mt-3">
+                                    {productsInfo.images?.map((img, i) => (
+                                        <div
+                                            key={i}
+                                            className={`w-20 h-20 sm:w-24 sm:h-24 border rounded-lg overflow-hidden cursor-pointer transition-transform ${frame === i ? "border-pink-500 shadow-lg scale-105" : "hover:scale-105 hover:shadow-md"
+                                                }`}
+                                            onClick={() => setFrame(i)}
+                                        >
+                                            <img src={img} alt={`${productsInfo.title}-${i}`} className="w-full h-full object-contain bg-white" />
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                            <div className="flex items-center justify-center p-5">
 
-
+                            {/* Add to Cart */}
+                            <div className="flex items-center justify-center mt-6">
                                 {currentItem ? (
-                                    <div className="flex gap-1">
-                                        <Button variant="outline-primary" >-</Button>
-                                        <p className="border-1 rounded-2xl px-7"> {currentItem.cartQuantity}</p>
-                                        <Button variant="outline-primary"
-                                            onClick={handleAddToCart} >+</Button>
+                                    <div className="flex items-center gap-2">
+                                        <Button variant="outline-primary" disabled={addingToCart}>
+                                            -
+                                        </Button>
+
+                                        <p className="border rounded-lg px-6 py-2">{currentItem.cartQuantity}</p>
+
+                                        <Button variant="outline-primary" onClick={handleAddToCart} disabled={addingToCart}>
+                                            {addingToCart ? "Adding..." : "+"}
+                                        </Button>
                                     </div>
                                 ) : (
-                                    <Button
-                                        onClick={handleAddToCart}
-                                        className="px-8 py-4 text-lg rounded-xl"
-                                    >
-                                        Add to Cart
+                                    <Button onClick={handleAddToCart} className="px-8 py-3 text-lg rounded-xl" disabled={addingToCart}>
+                                        {addingToCart ? "Adding..." : "Add to Cart"}
                                     </Button>
-                                )
-                                }
+                                )}
                             </div>
                         </>
                     ) : (
-                        <p>No product found</p>
+                        <p className="text-center text-lg mt-10">No product found</p>
                     )}
                 </div>
             )}
         </>
     );
-
-
 };
 
 export default ViewPage;
