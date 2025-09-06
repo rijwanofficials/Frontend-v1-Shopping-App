@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import { ClipLoader } from "react-spinners";
 import { useAuthContext } from "./Context/AppContext";
 import { BasicLayout } from "./pages/BasicLayout";
+import CartPage from "./pages/CartPage";
 
 
 const App = () => {
@@ -23,7 +24,6 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route element={<BasicLayout />}>
-
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/" element={<HomePage />} />
@@ -44,6 +44,7 @@ const App = () => {
           <Route path="/view/:id" element={<ViewPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/cart" element={<CartPage />} />
         </Route>
         <Route path="/*" element={<PageNotFound />} />
       </Routes>

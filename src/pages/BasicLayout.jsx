@@ -18,7 +18,6 @@ const BasicLayout = () => {
                 <Navbar />
                 <Outlet />
             </div>
-
             {!isCartEmpty && (
                 <div className="bg-gray-100 p-3 border-l border-gray-300 w-[178px] overflow-y-auto relative">
                     <h2 className="text-sm font-semibold mb-2">Your Cart</h2>
@@ -35,11 +34,9 @@ const BasicLayout = () => {
                                     className="max-h-16 object-contain"
                                 />
                             </div>
-
                            
                             <p className="text-xs font-semibold mt-1 truncate">{product.productId?.title}</p>
                             <p className="text-sm font-bold text-pink-800">₹{product.productId?.price}</p>
-
                             
                             <div className="flex items-center justify-center gap-2 mt-1">
                                 <Button size="sm" variant="outline-primary" className="px-2 py-1 text-xs">

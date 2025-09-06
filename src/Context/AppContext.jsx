@@ -33,7 +33,7 @@ const AppContextProvider = ({ children }) => {
 
     useEffect(() => {
         getUserLoggedIn();
-        getCartItems(); // fetch cart after checking user
+        getCartItems();
     }, []);
 
     // Logout
@@ -64,9 +64,7 @@ const AppContextProvider = ({ children }) => {
                 method: "POST",
                 credentials: "include",
             });
-
             const result = await response.json();
-
             if (response.status === 200) {
                 ShowSuccessToast("Product added to cart!");
                 // Update cart state with new or updated item
