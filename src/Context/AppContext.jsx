@@ -1,12 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { ShowErrorToast, ShowSuccessToast } from "../utils/ToastMessageHelper";
+import ClipLoader from "react-spinners/ClipLoader"; // loader
 
 const AuthContext = createContext();
 
 const AppContextProvider = ({ children }) => {
     const [user, setUser] = useState({ isLoggedIn: false });
     const [apploading, setAppLoading] = useState(true);
-    const [cart, setCart] = useState([]); // now an array of cart items
+    const [cart, setCart] = useState([]);
+    const [cartLoading, setCartLoading] = useState(false); // for getCartItems
+    const [cartUpdating, setCartUpdating] = useState(false); // for addtoCart
 
     const { isLoggedIn } = user;
 
@@ -47,7 +50,7 @@ const AppContextProvider = ({ children }) => {
             if (response.status === 200) {
                 ShowSuccessToast("You are now logged out!");
                 setUser({ isLoggedIn: false });
-                setCart([]); // clear cart on logout
+                setCart([]);
             } else {
                 const data = await response.json();
                 ShowErrorToast(data.message);
@@ -59,6 +62,7 @@ const AppContextProvider = ({ children }) => {
 
     // Add to cart
     const addtoCart = async (productId) => {
+        setCartUpdating(true); // start loader
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/cart/${productId}`, {
                 method: "POST",
@@ -67,7 +71,6 @@ const AppContextProvider = ({ children }) => {
             const result = await response.json();
             if (response.status === 200) {
                 ShowSuccessToast("Product added to cart!");
-                // Update cart state with new or updated item
                 if (result.cartItem) {
                     setCart((prevCart) => {
                         const exists = prevCart.find((item) => item._id === result.cartItem._id);
@@ -85,11 +88,14 @@ const AppContextProvider = ({ children }) => {
             }
         } catch (err) {
             ShowErrorToast(`Error adding to cart: ${err.message}`);
+        } finally {
+            setCartUpdating(false); // stop loader
         }
     };
 
-    // Fetch cart items from backend
+    // Fetch cart items
     const getCartItems = async () => {
+        setCartLoading(true); // start loader
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/cart/`, {
                 method: "GET",
@@ -99,14 +105,22 @@ const AppContextProvider = ({ children }) => {
             const result = await response.json();
 
             if (response.status === 200 && result.data?.cart) {
-                setCart(result.data.cart); // populate cart with product info
+                setCart(result.data.cart);
             } else {
                 ShowErrorToast("Failed to fetch cart items!");
             }
         } catch (err) {
             ShowErrorToast(`Error fetching cart: ${err.message}`);
+        } finally {
+            setCartLoading(false); // stop loader
         }
     };
+
+
+    const removeFromCart = () => {
+
+    }
+
 
     const handleSetUser = (data) => setUser(data);
 
@@ -118,12 +132,13 @@ const AppContextProvider = ({ children }) => {
         handleLogOutClick,
         cart,
         addtoCart,
+        cartLoading,
+        cartUpdating,
     };
 
     return <AuthContext.Provider value={sharedValues}>{children}</AuthContext.Provider>;
 };
 
 const useAuthContext = () => useContext(AuthContext);
-
 // eslint-disable-next-line react-refresh/only-export-components
 export { AuthContext, AppContextProvider, useAuthContext };
