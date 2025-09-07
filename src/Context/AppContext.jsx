@@ -11,6 +11,8 @@ const AppContextProvider = ({ children }) => {
     const [addingItems, setAddingItems] = useState({});
     const [removingItems, setRemovingItems] = useState({});
     const { isLoggedIn } = user;
+    const [cartVersion, setCartVersion] = useState(0);
+
 
     // Fetch logged-in user
     const getUserLoggedIn = async () => {
@@ -35,8 +37,14 @@ const AppContextProvider = ({ children }) => {
 
     useEffect(() => {
         getUserLoggedIn();
-        getCartItems();
     }, []);
+
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            getCartItems();
+        }
+    }, [cartVersion,isLoggedIn]);
 
     // Logout
     const handleLogOutClick = async () => {
@@ -104,6 +112,7 @@ const AppContextProvider = ({ children }) => {
             ShowErrorToast(`Error adding to cart: ${err.message}`);
         } finally {
             setAddingItems((prev) => ({ ...prev, [productId]: false }));
+            setCartVersion(prev => prev + 1);
         }
     };
 
@@ -129,6 +138,7 @@ const AppContextProvider = ({ children }) => {
                     }
                     return newCart;
                 });
+                setCartVersion(prev => prev + 1);
             } else {
                 ShowErrorToast(result.message || "Failed to remove from cart!");
             }

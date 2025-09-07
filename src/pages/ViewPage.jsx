@@ -56,7 +56,7 @@ const ViewPage = () => {
         }
         await addtoCart(productsInfo._id);
     };
-    
+
     const handleRemoveFromCart = async () => {
         if (!isLoggedIn) {
             ShowErrorToast("Please log in to update the cart");
@@ -74,22 +74,32 @@ const ViewPage = () => {
     return (
         <>
             {loading ? (
-                // Skeleton (unchanged)
-                <div className="px-4 py-6 animate-pulse space-y-4">
-                    {/* ... skeleton blocks ... */}
+                <div className="px-4 py-6 animate-pulse space-y-6">
+                    <div className="h-8 w-3/4 bg-gray-300 rounded mx-auto"></div>
+
+                    <div className="w-11/12 sm:w-3/4 h-64 sm:h-80 bg-gray-300 rounded-lg mx-auto"></div>
+
+                    <div className="flex gap-3 justify-center mt-3">
+                        <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-300 rounded-lg"></div>
+                        <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-300 rounded-lg"></div>
+                        <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-300 rounded-lg"></div>
+                    </div>
+
+                    <div className="flex justify-center mt-6 gap-2">
+                        <div className="w-12 h-10 bg-gray-300 rounded"></div>
+                        <div className="w-16 h-10 bg-gray-300 rounded"></div>
+                        <div className="w-12 h-10 bg-gray-300 rounded"></div>
+                    </div>
                 </div>
             ) : (
                 <div className="px-4">
                     {productsInfo ? (
                         <>
-                            {/* Product Title */}
                             <p className="text-center mt-5 mb-5 text-2xl font-semibold">
                                 {productsInfo.title}
                             </p>
 
-                            {/* Product Images & thumbnails (UNCHANGED) */}
                             <div className="flex flex-col items-center gap-4 max-w-md mx-auto">
-                                {/* Main image carousel */}
                                 <div className="relative w-full bg-white shadow rounded-lg p-2 flex justify-center items-center">
                                     <button
                                         onClick={() =>
@@ -119,7 +129,6 @@ const ViewPage = () => {
                                     </button>
                                 </div>
 
-                                {/* Thumbnail previews */}
                                 <div className="flex flex-wrap justify-center gap-3 mt-3">
                                     {productsInfo.images?.map((img, i) => (
                                         <div
@@ -140,11 +149,9 @@ const ViewPage = () => {
                                 </div>
                             </div>
 
-                            {/* Add/Remove to Cart */}
                             <div className="flex items-center justify-center mt-6">
                                 {currentItem ? (
                                     <div className="flex items-center gap-2">
-                                        {/* Remove Button */}
                                         <Button
                                             variant="outline-primary"
                                             onClick={handleRemoveFromCart}
@@ -162,7 +169,6 @@ const ViewPage = () => {
                                             {currentItem.cartQuantity}
                                         </p>
 
-                                        {/* Add Button */}
                                         <Button
                                             variant="outline-primary"
                                             onClick={handleAddToCart}
