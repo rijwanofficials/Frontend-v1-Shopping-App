@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { ShowErrorToast, ShowSuccessToast } from "../utils/ToastMessageHelper";
-import ClipLoader from "react-spinners/ClipLoader"; // loader
 
 const AuthContext = createContext();
 
@@ -9,8 +8,8 @@ const AppContextProvider = ({ children }) => {
     const [apploading, setAppLoading] = useState(true);
     const [cart, setCart] = useState([]);
     const [cartLoading, setCartLoading] = useState(false); // for getCartItems
-    const [cartUpdating, setCartUpdating] = useState(false); // for addtoCart
-
+    const [addingItems, setAddingItems] = useState({});
+    const [removingItems, setRemovingItems] = useState({});
     const { isLoggedIn } = user;
 
     // Fetch logged-in user
@@ -60,39 +59,6 @@ const AppContextProvider = ({ children }) => {
         }
     };
 
-    // Add to cart
-    const addtoCart = async (productId) => {
-        setCartUpdating(true); // start loader
-        try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/cart/${productId}`, {
-                method: "POST",
-                credentials: "include",
-            });
-            const result = await response.json();
-            if (response.status === 200) {
-                ShowSuccessToast("Product added to cart!");
-                if (result.cartItem) {
-                    setCart((prevCart) => {
-                        const exists = prevCart.find((item) => item._id === result.cartItem._id);
-                        if (exists) {
-                            return prevCart.map((item) =>
-                                item._id === result.cartItem._id ? result.cartItem : item
-                            );
-                        } else {
-                            return [...prevCart, result.cartItem];
-                        }
-                    });
-                }
-            } else {
-                ShowErrorToast(result.message || "Failed to add to cart!");
-            }
-        } catch (err) {
-            ShowErrorToast(`Error adding to cart: ${err.message}`);
-        } finally {
-            setCartUpdating(false); // stop loader
-        }
-    };
-
     // Fetch cart items
     const getCartItems = async () => {
         setCartLoading(true); // start loader
@@ -116,10 +82,62 @@ const AppContextProvider = ({ children }) => {
         }
     };
 
+    // Add to cart
+    // { productId: true/false }
+    const addtoCart = async (productId) => {
+        setAddingItems((prev) => ({ ...prev, [productId]: true }));
 
-    const removeFromCart = () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/cart/${productId}/add`, {
+                method: "POST",
+                credentials: "include",
+            });
+            const result = await response.json();
+            if (response.ok) {
+                ShowSuccessToast("Product added to cart!");
+                const updatedItem = result.cartItem;
+                setCart((prev) => ({ ...prev, [updatedItem._id]: updatedItem }));
+            } else {
+                ShowErrorToast(result.message || "Failed to add to cart!");
+            }
+        } catch (err) {
+            ShowErrorToast(`Error adding to cart: ${err.message}`);
+        } finally {
+            setAddingItems((prev) => ({ ...prev, [productId]: false }));
+        }
+    };
 
-    }
+    const removeFromCart = async (productId) => {
+        setRemovingItems((prev) => ({ ...prev, [productId]: true }));
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/cart/${productId}/remove`, {
+                method: "POST",
+                credentials: "include",
+            });
+            const result = await response.json();
+
+            if (response.ok) {
+                ShowSuccessToast(result.cartItem ? "Product quantity decreased!" : "Product removed from cart!");
+                const updatedItem = result.cartItem;
+
+                setCart((prev) => {
+                    const newCart = { ...prev };
+                    if (updatedItem) {
+                        newCart[updatedItem._id] = updatedItem;
+                    } else {
+                        delete newCart[productId];
+                    }
+                    return newCart;
+                });
+            } else {
+                ShowErrorToast(result.message || "Failed to remove from cart!");
+            }
+        } catch (err) {
+            ShowErrorToast(`Error removing from cart: ${err.message}`);
+        } finally {
+            setRemovingItems((prev) => ({ ...prev, [productId]: false }));
+        }
+    };
 
 
     const handleSetUser = (data) => setUser(data);
@@ -133,7 +151,9 @@ const AppContextProvider = ({ children }) => {
         cart,
         addtoCart,
         cartLoading,
-        cartUpdating,
+        removeFromCart,
+        addingItems,
+        removingItems,
     };
 
     return <AuthContext.Provider value={sharedValues}>{children}</AuthContext.Provider>;

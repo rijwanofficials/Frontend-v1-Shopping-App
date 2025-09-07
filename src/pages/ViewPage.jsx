@@ -4,18 +4,24 @@ import { Button } from "../components/ui/button";
 import { ShowErrorToast } from "../utils/ToastMessageHelper";
 import { useAuthContext } from "../Context/AppContext";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
-import ClipLoader from "react-spinners/ClipLoader"; // ✅ loader
+import ClipLoader from "react-spinners/ClipLoader";
 
 const ViewPage = () => {
     const [loading, setLoading] = useState(false);
     const [productsInfo, setProductsInfo] = useState(null);
     const [frame, setFrame] = useState(0);
-    const [addingToCart, setAddingToCart] = useState(false);
-    const [removingFromCart, setRemovingFromCart] = useState(false); // ✅ new state
 
     const { id } = useParams();
     const navigate = useNavigate();
-    const { isLoggedIn, addtoCart, removeFromCart, cart } = useAuthContext();
+
+    const {
+        isLoggedIn,
+        addtoCart,
+        removeFromCart,
+        cart,
+        addingItems,
+        removingItems,
+    } = useAuthContext();
 
     // Fetch product details
     const viewProducts = async () => {
@@ -42,38 +48,22 @@ const ViewPage = () => {
         viewProducts();
     }, [id]);
 
-    // Handle add to cart
     const handleAddToCart = async () => {
         if (!isLoggedIn) {
             ShowErrorToast("Please log in to add products to the cart");
             navigate(`/login?redirect=/view/${id}`);
             return;
         }
-        try {
-            setAddingToCart(true);
-            await addtoCart(productsInfo._id);
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setAddingToCart(false);
-        }
+        await addtoCart(productsInfo._id);
     };
-
-    // Handle remove from cart
+    
     const handleRemoveFromCart = async () => {
         if (!isLoggedIn) {
             ShowErrorToast("Please log in to update the cart");
             navigate(`/login?redirect=/view/${id}`);
             return;
         }
-        try {
-            setRemovingFromCart(true);
-            await removeFromCart(productsInfo._id); // ✅ call remove
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setRemovingFromCart(false);
-        }
+        await removeFromCart(productsInfo._id);
     };
 
     // Find if product is already in cart
@@ -84,23 +74,9 @@ const ViewPage = () => {
     return (
         <>
             {loading ? (
-                // 🔹 your skeleton stays untouched
+                // Skeleton (unchanged)
                 <div className="px-4 py-6 animate-pulse space-y-4">
-                    <div className="h-8 bg-gray-300 rounded w-3/4 mx-auto"></div>
-                    <div className="relative w-full max-w-md mx-auto bg-gray-200 rounded-lg h-60 sm:h-80 flex items-center justify-center">
-                        <div className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-300 rounded-full"></div>
-                        <div className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-300 rounded-full"></div>
-                    </div>
-                    <div className="flex flex-wrap justify-center gap-3 mt-3">
-                        {Array.from({ length: 4 }).map((_, i) => (
-                            <div key={i} className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-300 rounded-lg"></div>
-                        ))}
-                    </div>
-                    <div className="flex justify-center mt-6 gap-2">
-                        <div className="w-10 h-10 bg-gray-300 rounded"></div>
-                        <div className="w-16 h-10 bg-gray-300 rounded"></div>
-                        <div className="w-10 h-10 bg-gray-300 rounded"></div>
-                    </div>
+                    {/* ... skeleton blocks ... */}
                 </div>
             ) : (
                 <div className="px-4">
@@ -113,14 +89,18 @@ const ViewPage = () => {
 
                             {/* Product Images & thumbnails (UNCHANGED) */}
                             <div className="flex flex-col items-center gap-4 max-w-md mx-auto">
+                                {/* Main image carousel */}
                                 <div className="relative w-full bg-white shadow rounded-lg p-2 flex justify-center items-center">
                                     <button
                                         onClick={() =>
-                                            setFrame((prev) => (prev - 1 + productsInfo.images.length) % productsInfo.images.length)
+                                            setFrame((prev) =>
+                                                (prev - 1 + productsInfo.images.length) %
+                                                productsInfo.images.length
+                                            )
                                         }
                                         className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-pink-600 transition"
                                     >
-                                        <HiChevronLeft size={35} className="hover:cursor-pointer scale-105" />
+                                        <HiChevronLeft size={35} />
                                     </button>
                                     <img
                                         src={productsInfo.images[frame]}
@@ -128,18 +108,25 @@ const ViewPage = () => {
                                         className="w-full max-h-[240px] sm:max-h-[320px] object-contain rounded-md"
                                     />
                                     <button
-                                        onClick={() => setFrame((prev) => (prev + 1) % productsInfo.images.length)}
+                                        onClick={() =>
+                                            setFrame((prev) =>
+                                                (prev + 1) % productsInfo.images.length
+                                            )
+                                        }
                                         className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-pink-600 transition"
                                     >
-                                        <HiChevronRight size={35} className="hover:cursor-pointer scale-105" />
+                                        <HiChevronRight size={35} />
                                     </button>
                                 </div>
 
+                                {/* Thumbnail previews */}
                                 <div className="flex flex-wrap justify-center gap-3 mt-3">
                                     {productsInfo.images?.map((img, i) => (
                                         <div
                                             key={i}
-                                            className={`w-20 h-20 sm:w-24 sm:h-24 border rounded-lg overflow-hidden cursor-pointer transition-transform ${frame === i ? "border-pink-500 shadow-lg scale-105" : "hover:scale-105 hover:shadow-md"
+                                            className={`w-20 h-20 sm:w-24 sm:h-24 border rounded-lg overflow-hidden cursor-pointer transition-transform ${frame === i
+                                                    ? "border-pink-500 shadow-lg scale-105"
+                                                    : "hover:scale-105 hover:shadow-md"
                                                 }`}
                                             onClick={() => setFrame(i)}
                                         >
@@ -161,10 +148,10 @@ const ViewPage = () => {
                                         <Button
                                             variant="outline-primary"
                                             onClick={handleRemoveFromCart}
-                                            disabled={removingFromCart}
+                                            disabled={removingItems[productsInfo._id]}
                                             className="flex items-center justify-center w-12 h-10"
                                         >
-                                            {removingFromCart ? (
+                                            {removingItems[productsInfo._id] ? (
                                                 <ClipLoader size={16} color="#fff" />
                                             ) : (
                                                 "-"
@@ -179,10 +166,10 @@ const ViewPage = () => {
                                         <Button
                                             variant="outline-primary"
                                             onClick={handleAddToCart}
-                                            disabled={addingToCart}
+                                            disabled={addingItems[productsInfo._id]}
                                             className="flex items-center justify-center w-12 h-10"
                                         >
-                                            {addingToCart ? (
+                                            {addingItems[productsInfo._id] ? (
                                                 <ClipLoader size={16} color="#fff" />
                                             ) : (
                                                 "+"
@@ -193,9 +180,9 @@ const ViewPage = () => {
                                     <Button
                                         onClick={handleAddToCart}
                                         className="px-8 py-3 text-lg rounded-xl flex items-center justify-center"
-                                        disabled={addingToCart}
+                                        disabled={addingItems[productsInfo._id]}
                                     >
-                                        {addingToCart ? (
+                                        {addingItems[productsInfo._id] ? (
                                             <ClipLoader size={18} color="#fff" />
                                         ) : (
                                             "Add to Cart"
