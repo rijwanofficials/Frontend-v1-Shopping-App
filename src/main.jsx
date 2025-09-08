@@ -6,13 +6,11 @@ import { ToastContainer } from 'react-toastify'
 import { AppContextProvider } from "./Context/AppContext";
 
 
-createRoot(document.getElementById('root')).render(
-
-  <>
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
     <AppContextProvider>
       <App />
+      <ToastContainer />
     </AppContextProvider>
-    <ToastContainer />
-  </>
-
-)
+  </StrictMode>
+);

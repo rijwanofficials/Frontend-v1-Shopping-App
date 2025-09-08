@@ -99,13 +99,15 @@ const ViewPage = () => {
                                 {productsInfo.title}
                             </p>
 
+                            {/* Product Images */}
                             <div className="flex flex-col items-center gap-4 max-w-md mx-auto">
                                 <div className="relative w-full bg-white shadow rounded-lg p-2 flex justify-center items-center">
                                     <button
                                         onClick={() =>
-                                            setFrame((prev) =>
-                                                (prev - 1 + productsInfo.images.length) %
-                                                productsInfo.images.length
+                                            setFrame(
+                                                (prev) =>
+                                                    (prev - 1 + productsInfo.images.length) %
+                                                    productsInfo.images.length
                                             )
                                         }
                                         className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-pink-600 transition"
@@ -119,9 +121,7 @@ const ViewPage = () => {
                                     />
                                     <button
                                         onClick={() =>
-                                            setFrame((prev) =>
-                                                (prev + 1) % productsInfo.images.length
-                                            )
+                                            setFrame((prev) => (prev + 1) % productsInfo.images.length)
                                         }
                                         className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-pink-600 transition"
                                     >
@@ -149,8 +149,15 @@ const ViewPage = () => {
                                 </div>
                             </div>
 
+                            {/* Cart Section */}
                             <div className="flex items-center justify-center mt-6">
-                                {currentItem ? (
+                                {productsInfo?.quantity <= 0 ? (
+                                    // 1️⃣ Out of stock
+                                    <p className="text-red-600 bg-amber-300 p-1 rounded-md font-semibold text-lg">
+                                        Out of Stock
+                                    </p>
+                                ) : currentItem ? (
+                                    // 2️⃣ Already in cart → show - qty +
                                     <div className="flex items-center gap-2">
                                         <Button
                                             variant="outline-primary"
@@ -172,7 +179,10 @@ const ViewPage = () => {
                                         <Button
                                             variant="outline-primary"
                                             onClick={handleAddToCart}
-                                            disabled={addingItems[productsInfo._id]}
+                                            disabled={
+                                                addingItems[productsInfo._id] ||
+                                                currentItem.cartQuantity >= productsInfo.quantity
+                                            }
                                             className="flex items-center justify-center w-12 h-10"
                                         >
                                             {addingItems[productsInfo._id] ? (
@@ -183,6 +193,7 @@ const ViewPage = () => {
                                         </Button>
                                     </div>
                                 ) : (
+                                    // 3️⃣ Not in cart yet → Add to cart button
                                     <Button
                                         onClick={handleAddToCart}
                                         className="px-8 py-3 text-lg rounded-xl flex items-center justify-center"
@@ -204,6 +215,7 @@ const ViewPage = () => {
             )}
         </>
     );
+
 };
 
 export default ViewPage;

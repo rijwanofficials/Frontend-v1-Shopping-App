@@ -12,6 +12,8 @@ const AppContextProvider = ({ children }) => {
     const [removingItems, setRemovingItems] = useState({});
     const { isLoggedIn } = user;
     const [cartVersion, setCartVersion] = useState(0);
+    const [placingOrder, setPlacingOrder] = useState(false); // for placing order
+
 
 
     // Fetch logged-in user
@@ -44,9 +46,8 @@ const AppContextProvider = ({ children }) => {
         if (isLoggedIn) {
             getCartItems();
         }
-    }, [cartVersion,isLoggedIn]);
+    }, [cartVersion, isLoggedIn]);
 
-    // Logout
     const handleLogOutClick = async () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/logout`, {
@@ -67,7 +68,6 @@ const AppContextProvider = ({ children }) => {
         }
     };
 
-    // Fetch cart items
     const getCartItems = async () => {
         setCartLoading(true); // start loader
         try {
@@ -90,8 +90,6 @@ const AppContextProvider = ({ children }) => {
         }
     };
 
-    // Add to cart
-    // { productId: true/false }
     const addtoCart = async (productId) => {
         setAddingItems((prev) => ({ ...prev, [productId]: true }));
 
@@ -149,6 +147,32 @@ const AppContextProvider = ({ children }) => {
         }
     };
 
+    const handleCheckout = async (address) => {
+        setPlacingOrder(true);
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/orders`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ address }),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                ShowSuccessToast("Order placed successfully!");
+                setCart([]);
+            } else {
+                ShowErrorToast(result.message || "Failed to place order!");
+            }
+        } catch (err) {
+            ShowErrorToast(`Error placing order: ${err.message}`);
+        } finally {
+            setPlacingOrder(false);
+            // window.location.reload();
+        }
+    };
+
+
 
     const handleSetUser = (data) => setUser(data);
 
@@ -164,6 +188,8 @@ const AppContextProvider = ({ children }) => {
         removeFromCart,
         addingItems,
         removingItems,
+        handleCheckout,
+        placingOrder
     };
 
     return <AuthContext.Provider value={sharedValues}>{children}</AuthContext.Provider>;

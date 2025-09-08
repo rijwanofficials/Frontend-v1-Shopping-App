@@ -13,6 +13,7 @@ const CartSideBar = () => {
         addingItems,
         cartLoading,
         isLoggedIn,
+        placingOrder
     } = useAuthContext();
 
     const navigate = useNavigate();
@@ -39,6 +40,19 @@ const CartSideBar = () => {
         navigate(`/view/${productId}`);
     };
 
+
+    const handleCheckout = () => {
+        if (!isLoggedIn) {
+            ShowErrorToast("Please log in to checkout");
+            navigate("/login?redirect=/checkout");
+            return;
+        }
+        navigate("/checkout");
+    };
+
+
+
+
     if (cartLoading) {
         return (
             <div className="fixed right-0 top-0 w-[178px] h-screen bg-gray-100 p-3 border-l border-gray-300 flex justify-center items-center">
@@ -57,7 +71,6 @@ const CartSideBar = () => {
                 )}
                 {cartItems.map((product) => {
                     const productId = product.productId._id;
-
                     return (
                         <div
 
@@ -83,40 +96,51 @@ const CartSideBar = () => {
                             </p>
 
                             <div className="flex items-center justify-center gap-2 mt-1">
-                            
-                                <Button
-                                    size="sm"
-                                    variant="outline-primary"
-                                    className="px-2 py-1 text-xs flex items-center justify-center"
-                                    onClick={() => handleRemoveFromCart(productId)}
-                                    disabled={removingItems[productId]}
-                                >
-                                    {removingItems[productId] ? (
-                                        <ClipLoader size={14} color="#36d7b7" />
-                                    ) : (
-                                        "-"
-                                    )}
-                                </Button>
+                                {product.productId.quantity === 0 ? (
+                                    <span className="text-md text-red-600  bg-amber-300 p-1 rounded-md font-semibold">Out of Stock</span>
+                                ) : (
+                                    <>
+                                        <Button
+                                            size="sm"
+                                            variant="outline-primary"
+                                            className="px-2 py-1 text-xs flex items-center justify-center"
+                                            onClick={() => handleRemoveFromCart(productId)}
+                                            disabled={removingItems[productId]}
+                                        >
+                                            {removingItems[productId] ? (
+                                                <ClipLoader size={14} color="#36d7b7" />
+                                            ) : (
+                                                "-"
+                                            )}
+                                        </Button>
 
-                                <span className="text-xs">{product.cartQuantity}</span>
+                                        <span className="text-xs">{product.cartQuantity}</span>
 
-                                <Button
-                                    size="sm"
-                                    variant="outline-primary"
-                                    className="px-2 py-1 text-xs flex items-center justify-center"
-                                    onClick={() => handleAddToCart(productId)}
-                                    disabled={addingItems[productId]}
-                                >
-                                    {addingItems[productId] ? (
-                                        <ClipLoader size={14} color="#36d7b7" />
-                                    ) : (
-                                        "+"
-                                    )}
-                                </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="outline-primary"
+                                            className="px-2 py-1 text-xs flex items-center justify-center"
+                                            onClick={() => handleAddToCart(productId)}
+                                            disabled={addingItems[productId]}
+                                        >
+                                            {addingItems[productId] ? (
+                                                <ClipLoader size={14} color="#36d7b7" />
+                                            ) : (
+                                                "+"
+                                            )}
+                                        </Button>
+                                    </>
+                                )}
                             </div>
+
                         </div>
                     );
                 })}
+                <div className="flex justify-center items-center mt-4">
+                    <Button onClick={handleCheckout} disabled={placingOrder}>
+                        {placingOrder ? <ClipLoader size={14} color="#36d7b7" /> : "Checkout"}
+                    </Button>
+                </div>
             </div>
         </div>
     );

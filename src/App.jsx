@@ -9,6 +9,7 @@ import { ClipLoader } from "react-spinners";
 import { useAuthContext } from "./Context/AppContext";
 import { BasicLayout } from "./pages/BasicLayout";
 import CartPage from "./pages/CartPage";
+import { CheckoutPage } from "./pages/CheckoutPage";
 
 
 const App = () => {
@@ -45,6 +46,8 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+
         </Route>
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
