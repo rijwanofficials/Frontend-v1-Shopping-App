@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuthContext } from "../Context/AppContext";
 import AddressPage from "./AddressPage";
-import { Button } from "../components/ui/button";
+import Button from "../components/ui/button";
 
 const CheckoutPage = () => {
     const { cart, cartLoading, handleCheckout, placingOrder } = useAuthContext();

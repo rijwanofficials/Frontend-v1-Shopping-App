@@ -11,6 +11,8 @@ const SearchPage = () => {
     const [total, setTotal] = useState(0);
 
     const searchText = query.get("q") || "";
+    const category = query.get("category") || "";
+
     const navigate = useNavigate();
     const { cart } = useAuthContext();
 
@@ -21,7 +23,7 @@ const SearchPage = () => {
         try {
             setLoading(true);
             const response = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/products?q=${searchText}&limit=${LIMIT_PER_PAGE}&page=${page}`,
+                `${import.meta.env.VITE_BACKEND_URL}/products?q=${searchText}&category=${category}&limit=${LIMIT_PER_PAGE}&page=${page}`,
                 { method: "GET", credentials: "include" }
             );
             const result = await response.json();

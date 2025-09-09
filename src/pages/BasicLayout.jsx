@@ -1,5 +1,6 @@
 import { Outlet } from "react-router";
 import Navbar from "../Components/Navbar";
+import Footer from "../components/Footer";
 
 const BasicLayout = () => {
     return (
@@ -8,11 +9,12 @@ const BasicLayout = () => {
             <header className="sticky top-0 z-50 shadow-md">
                 <Navbar />
             </header>
-
-            {/* Page content */}
             <main className="flex-1 px-1 sm:px-2 lg:px-1 py-1">
                 <Outlet context={{ fullWidth: true }} />
             </main>
+            <footer>
+                <Footer />
+            </footer>
         </div>
     );
 };

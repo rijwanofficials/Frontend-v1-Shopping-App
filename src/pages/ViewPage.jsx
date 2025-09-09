@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { Button } from "../components/ui/button";
 import { ShowErrorToast } from "../utils/ToastMessageHelper";
 import { useAuthContext } from "../Context/AppContext";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CartSideBar } from "../components/ui/CartSideBar";
+import Button from "../components/ui/button";
 
 const ViewPage = () => {
     const [loading, setLoading] = useState(false);

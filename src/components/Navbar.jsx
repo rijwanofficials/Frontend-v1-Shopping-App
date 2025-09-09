@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
-import { Button } from "./ui/button";
+
 import { useAuthContext } from "../Context/AppContext";
 import { IoClose, IoMenu } from "react-icons/io5";
 import { FaCartShopping } from "react-icons/fa6";
-
 const Navbar = () => {
     const [query] = useSearchParams();
     const searchTextDefaultValue = query.get("q") || "";
@@ -30,7 +29,7 @@ const Navbar = () => {
                         {menuOpen ? <IoClose size={21} className="hover:cursor-pointer" /> : <IoMenu size={21} className="hover:cursor-pointer" />}
                     </button>
                     <Link to="/" className="text-lg sm:text-xl font-bold">
-                        My Shopping App
+                        SnapBuy
                     </Link>
                 </div>
 

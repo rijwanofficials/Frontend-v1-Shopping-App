@@ -1,8 +1,30 @@
-import { Button } from "../components/ui/button";
+import { useNavigate } from "react-router";
 import { useAuthContext } from "../Context/AppContext";
+import Button from "../components/ui/button";
 
 const CartPage = () => {
-    const { cart, handleCheckout } = useAuthContext();
+    const { cart, isLoggedIn, getCartItems } = useAuthContext();
+    const navigate = useNavigate();
+
+    const goToAddressPage = async () => {
+        if (!isLoggedIn) {
+            navigate("/login?redirect=/checkout");
+            return;
+        }
+
+        await getCartItems();
+
+        // only pass safe, serializable data
+        const cartData = cart.map(item => ({
+            id: item.productId._id,
+            title: item.productId.title,
+            price: item.productId.price,
+            quantity: item.cartQuantity,
+            image: item.productId.images?.[0],
+        }));
+
+        navigate("/checkout", { state: { cart: cartData } });
+    };
 
     return (
         <div className="flex flex-col h-fit bg-gray-50">
@@ -19,8 +41,12 @@ const CartPage = () => {
                             Your cart is empty
                         </p>
                     ) : (
-                        <ul className={`flex flex-col gap-4 px-6 py-4 
-                                        ${cart.length > 4 ? "overflow-y-auto max-h-[70vh]" : ""}`}>
+                        <ul
+                            className={`flex flex-col gap-4 px-6 py-4 ${cart.length > 4
+                                    ? "overflow-y-auto max-h-[70vh]"
+                                    : ""
+                                }`}
+                        >
                             {cart.map((item) => (
                                 <li
                                     key={item._id}
@@ -58,7 +84,7 @@ const CartPage = () => {
             </main>
             {cart.length > 0 && (
                 <div className="flex justify-center items-center mt-4">
-                    <Button onClick={handleCheckout}>Checkout</Button>
+                    <Button onClick={goToAddressPage}>Checkout</Button>
                 </div>
             )}
         </div>

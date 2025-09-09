@@ -1,5 +1,5 @@
-import { Button } from "../components/ui/button";
 import { useState } from "react";
+import Button from "../components/ui/button";
 
 const AddressPage = ({ onSubmit }) => {
     const [fullName, setFullName] = useState("");
