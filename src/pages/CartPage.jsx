@@ -1,7 +1,8 @@
+import { Button } from "../components/ui/button";
 import { useAuthContext } from "../Context/AppContext";
 
 const CartPage = () => {
-    const { cart } = useAuthContext();
+    const { cart, handleCheckout } = useAuthContext();
 
     return (
         <div className="flex flex-col h-fit bg-gray-50">
@@ -55,6 +56,11 @@ const CartPage = () => {
                     )}
                 </div>
             </main>
+            {cart.length > 0 && (
+                <div className="flex justify-center items-center mt-4">
+                    <Button onClick={handleCheckout}>Checkout</Button>
+                </div>
+            )}
         </div>
     );
 };
