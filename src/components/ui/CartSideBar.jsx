@@ -13,11 +13,12 @@ const CartSideBar = () => {
         addingItems,
         cartLoading,
         isLoggedIn,
-        placingOrder
+        getCartItems
     } = useAuthContext();
 
     const navigate = useNavigate();
     const cartItems = Object.values(cart);
+
 
     const handleAddToCart = async (productId) => {
         if (!isLoggedIn) {
@@ -27,6 +28,7 @@ const CartSideBar = () => {
         }
         await addtoCart(productId);
     };
+
     const handleRemoveFromCart = async (productId) => {
         if (!isLoggedIn) {
             ShowErrorToast("Please log in to update the cart");
@@ -40,18 +42,17 @@ const CartSideBar = () => {
         navigate(`/view/${productId}`);
     };
 
-
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         if (!isLoggedIn) {
             ShowErrorToast("Please log in to checkout");
             navigate("/login?redirect=/checkout");
             return;
         }
-        navigate("/checkout");
+        // 🔹 disable immediately
+
+        await getCartItems();
+        navigate("/checkout", { state: { cart } });
     };
-
-
-
 
     if (cartLoading) {
         return (
@@ -69,17 +70,19 @@ const CartSideBar = () => {
                 {cartItems.length === 0 && (
                     <p className="text-xs text-center mt-3">Your cart is empty</p>
                 )}
+
                 {cartItems.map((product) => {
                     const productId = product.productId._id;
+
                     return (
                         <div
-
                             key={productId}
                             className="mb-3 p-2 bg-white rounded-md shadow-sm hover:shadow-md transition"
                         >
-                            <div className="w-full h-20 flex justify-center items-center cursor-pointer"
+                            {/* Product image */}
+                            <div
+                                className="w-full h-20 flex justify-center items-center cursor-pointer"
                                 onClick={() => handleViewProduct(productId)}
-
                             >
                                 <img
                                     src={product.productId?.images?.[0]}
@@ -88,6 +91,7 @@ const CartSideBar = () => {
                                 />
                             </div>
 
+                            {/* Title + Price */}
                             <p className="text-xs font-semibold mt-1 truncate">
                                 {product.productId?.title}
                             </p>
@@ -95,50 +99,60 @@ const CartSideBar = () => {
                                 ₹{product.productId?.price}
                             </p>
 
-                            <div className="flex items-center justify-center gap-2 mt-1">
-                                {product.productId.quantity === 0 ? (
-                                    <span className="text-md text-red-600  bg-amber-300 p-1 rounded-md font-semibold">Out of Stock</span>
-                                ) : (
-                                    <>
-                                        <Button
-                                            size="sm"
-                                            variant="outline-primary"
-                                            className="px-2 py-1 text-xs flex items-center justify-center"
-                                            onClick={() => handleRemoveFromCart(productId)}
-                                            disabled={removingItems[productId]}
-                                        >
-                                            {removingItems[productId] ? (
-                                                <ClipLoader size={14} color="#36d7b7" />
-                                            ) : (
-                                                "-"
-                                            )}
-                                        </Button>
-
-                                        <span className="text-xs">{product.cartQuantity}</span>
-
-                                        <Button
-                                            size="sm"
-                                            variant="outline-primary"
-                                            className="px-2 py-1 text-xs flex items-center justify-center"
-                                            onClick={() => handleAddToCart(productId)}
-                                            disabled={addingItems[productId]}
-                                        >
-                                            {addingItems[productId] ? (
-                                                <ClipLoader size={14} color="#36d7b7" />
-                                            ) : (
-                                                "+"
-                                            )}
-                                        </Button>
-                                    </>
+                            {/* Out of Stock + Buttons */}
+                            <div className="flex flex-col items-center justify-center gap-1 mt-1">
+                                {product.productId.quantity === 0 && (
+                                    <span className="text-md text-red-600 bg-amber-300 px-2 py-1 rounded-md font-semibold">
+                                        Out of Stock
+                                    </span>
                                 )}
-                            </div>
 
+                                <div className="flex items-center justify-center gap-2">
+                                    {/* Remove (-) */}
+                                    <Button
+                                        size="sm"
+                                        variant="outline-primary"
+                                        className="px-2 py-1 text-xs flex items-center justify-center"
+                                        onClick={() => handleRemoveFromCart(productId)}
+                                        disabled={removingItems[productId]}
+                                    >
+                                        {removingItems[productId] ? (
+                                            <ClipLoader size={14} color="#36d7b7" />
+                                        ) : (
+                                            "-"
+                                        )}
+                                    </Button>
+
+                                    {/* Quantity */}
+                                    <span className="text-xs">{product.cartQuantity}</span>
+
+                                    {/* Add (+) */}
+                                    <Button
+                                        size="sm"
+                                        variant="outline-primary"
+                                        className="px-2 py-1 text-xs flex items-center justify-center"
+                                        onClick={() => handleAddToCart(productId)}
+                                        disabled={
+                                            addingItems[productId] ||
+                                            product.productId.quantity === 0
+                                        }
+                                    >
+                                        {addingItems[productId] ? (
+                                            <ClipLoader size={14} color="#36d7b7" />
+                                        ) : (
+                                            "+"
+                                        )}
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
                     );
                 })}
+
+                {/* Checkout Button */}
                 <div className="flex justify-center items-center mt-4">
-                    <Button onClick={handleCheckout} disabled={placingOrder}>
-                        {placingOrder ? <ClipLoader size={14} color="#36d7b7" /> : "Checkout"}
+                    <Button onClick={handleCheckout}>
+                        Checkout
                     </Button>
                 </div>
             </div>

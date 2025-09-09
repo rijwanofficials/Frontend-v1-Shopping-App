@@ -193,7 +193,6 @@ const ViewPage = () => {
                                         </Button>
                                     </div>
                                 ) : (
-                                    // 3️⃣ Not in cart yet → Add to cart button
                                     <Button
                                         onClick={handleAddToCart}
                                         className="px-8 py-3 text-lg rounded-xl flex items-center justify-center"

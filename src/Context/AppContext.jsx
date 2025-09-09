@@ -14,8 +14,7 @@ const AppContextProvider = ({ children }) => {
     const [cartVersion, setCartVersion] = useState(0);
     const [placingOrder, setPlacingOrder] = useState(false); // for placing order
 
-
-
+    
     // Fetch logged-in user
     const getUserLoggedIn = async () => {
         try {
@@ -148,13 +147,15 @@ const AppContextProvider = ({ children }) => {
     };
 
     const handleCheckout = async (address) => {
+        console.log("Sending order with address:", address); // 🔹 Check address structure
         setPlacingOrder(true);
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/orders`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
-                body: JSON.stringify({ address }),
+                body: JSON.stringify({address }),
+
             });
 
             const result = await response.json();
@@ -189,7 +190,8 @@ const AppContextProvider = ({ children }) => {
         addingItems,
         removingItems,
         handleCheckout,
-        placingOrder
+        placingOrder,
+        getCartItems
     };
 
     return <AuthContext.Provider value={sharedValues}>{children}</AuthContext.Provider>;

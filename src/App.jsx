@@ -11,7 +11,6 @@ import { BasicLayout } from "./pages/BasicLayout";
 import CartPage from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
 
-
 const App = () => {
   const { apploading, isLoggedIn } = useAuthContext();
 
