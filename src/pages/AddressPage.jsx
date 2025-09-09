@@ -121,7 +121,6 @@ const AddressPage = ({ onSubmit }) => {
                             onChange={(e) => setCountry(e.target.value)}
                             className="border-2 border-gray-400/70 rounded-md px-3 py-2 text-sm"
                             placeholder="Enter country"
-                            required
                         />
                     </div>
 

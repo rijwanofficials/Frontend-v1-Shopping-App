@@ -46,7 +46,6 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
-
         </Route>
         <Route path="/*" element={<PageNotFound />} />
       </Routes>

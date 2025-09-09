@@ -19,6 +19,8 @@ const CartSideBar = () => {
     const navigate = useNavigate();
     const cartItems = Object.values(cart);
 
+    // Hide sidebar completely if cart is empty
+    if (!cartLoading && cartItems.length === 0) return null;
 
     const handleAddToCart = async (productId) => {
         if (!isLoggedIn) {
@@ -48,8 +50,6 @@ const CartSideBar = () => {
             navigate("/login?redirect=/checkout");
             return;
         }
-        // 🔹 disable immediately
-
         await getCartItems();
         navigate("/checkout", { state: { cart } });
     };
@@ -64,11 +64,11 @@ const CartSideBar = () => {
 
     return (
         <div className="fixed right-0 top-0 w-[178px] h-screen bg-gray-100 p-3 border-l border-gray-300 flex flex-col">
-            <h2 className="text-sm font-semibold mb-2">Your Cart</h2>
-
             <div className="overflow-y-auto flex-1 pr-1">
-                {cartItems.length === 0 && (
-                    <p className="text-xs text-center mt-3">Your cart is empty</p>
+                {cartItems.length > 0 && (
+                    <h2 className="text-md font-bold mb-3 text-center text-gray-800">
+                        Your Cart Items
+                    </h2>
                 )}
 
                 {cartItems.map((product) => {
@@ -108,7 +108,6 @@ const CartSideBar = () => {
                                 )}
 
                                 <div className="flex items-center justify-center gap-2">
-                                    {/* Remove (-) */}
                                     <Button
                                         size="sm"
                                         variant="outline-primary"
@@ -123,10 +122,8 @@ const CartSideBar = () => {
                                         )}
                                     </Button>
 
-                                    {/* Quantity */}
                                     <span className="text-xs">{product.cartQuantity}</span>
 
-                                    {/* Add (+) */}
                                     <Button
                                         size="sm"
                                         variant="outline-primary"
@@ -149,12 +146,11 @@ const CartSideBar = () => {
                     );
                 })}
 
-                {/* Checkout Button */}
-                <div className="flex justify-center items-center mt-4">
-                    <Button onClick={handleCheckout}>
-                        Checkout
-                    </Button>
-                </div>
+                {cartItems.length > 0 && (
+                    <div className="flex justify-center items-center mt-4">
+                        <Button onClick={handleCheckout}>Checkout</Button>
+                    </div>
+                )}
             </div>
         </div>
     );

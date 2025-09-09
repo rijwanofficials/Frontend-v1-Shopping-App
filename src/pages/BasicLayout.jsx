@@ -1,19 +1,18 @@
 import { Outlet } from "react-router";
-import Navbar from "../components/Navbar";
-import { useAuthContext } from "../Context/AppContext";
-import { CartSideBar } from "../components/ui/CartSideBar";
+import Navbar from "../Components/Navbar";
 
 const BasicLayout = () => {
-    const { cart } = useAuthContext();
-    const cartItems = Object.values(cart);
-    const isCartEmpty = cartItems.length === 0;
     return (
-        <div className={`grid ${!isCartEmpty ? "grid-cols-[1fr_175px]" : "grid"} min-h-screen`}>
-            <div>
+        <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-gray-100">
+            {/* Navbar always fixed at the top */}
+            <header className="sticky top-0 z-50 shadow-md">
                 <Navbar />
-                <Outlet />
-            </div>
-            {!isCartEmpty && <CartSideBar />}
+            </header>
+
+            {/* Page content */}
+            <main className="flex-1 px-1 sm:px-2 lg:px-1 py-1">
+                <Outlet context={{ fullWidth: true }} />
+            </main>
         </div>
     );
 };
