@@ -112,7 +112,7 @@ const ViewPage = () => {
                                                         productsInfo.images.length
                                                 )
                                             }
-                                            className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-pink-600 transition"
+                                            className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-red-600 cursor-pointer hover:scale-110 transition"
                                         >
                                             <HiChevronLeft size={35} />
                                         </button>
@@ -125,7 +125,7 @@ const ViewPage = () => {
                                             onClick={() =>
                                                 setFrame((prev) => (prev + 1) % productsInfo.images.length)
                                             }
-                                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-pink-600 transition"
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-red-600 cursor-pointer hover:scale-110 transition"
                                         >
                                             <HiChevronRight size={35} />
                                         </button>

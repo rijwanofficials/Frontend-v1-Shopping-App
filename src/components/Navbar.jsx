@@ -18,7 +18,7 @@ const Navbar = () => {
     const cartCount = Object.values(cart).reduce((total, item) => total + (item.cartQuantity || 0), 0);
 
     return (
-        <header className="sticky top-0 z-50 bg-pink-950 text-white shadow">
+        <header className="sticky top-0 z-50 bg-blue-600 text-white shadow">
             <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 sm:px-6">
                 {/* Left: Brand + Mobile toggle */}
                 <div className="flex items-center gap-2">
@@ -57,7 +57,7 @@ const Navbar = () => {
                         />
                         <button
                             onClick={handleSearchPage}
-                            className=" bg-white text-pink-950 px-3 sm:px-4 py-2 rounded-md hover:bg-gray-100 cursor-pointer transform hover:scale-105 transition flex-shrink-0 text-sm sm:text-base">
+                            className=" bg-white text-blue-600 px-3 sm:px-4 py-2 rounded-md hover:bg-gray-100 cursor-pointer transform hover:scale-105 transition flex-shrink-0 text-sm sm:text-base">
                             Search
                         </button>
                     </div>
@@ -80,7 +80,7 @@ const Navbar = () => {
                     )}
 
                     {/* Cart Icon */}
-                    <Link to="/cart" className="relative text-white hover:text-pink-400">
+                    <Link to="/cart" className="relative text-white hover:text-blue-500">
                         <FaCartShopping size={24} />
                         {cartCount > 0 && (
                             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
@@ -97,7 +97,7 @@ const Navbar = () => {
                     <Link
                         to="/"
                         onClick={() => setMenuOpen(false)}
-                        className="w-auto self-start px-3 py-2 rounded-md hover:bg-pink-700 transition"
+                        className="w-auto self-start px-3 py-2 rounded-md hover:bg-blue-500 transition"
                     >
                         Home
                     </Link>
@@ -116,7 +116,7 @@ const Navbar = () => {
                         <Link
                             to="/login"
                             onClick={() => setMenuOpen(false)}
-                            className="inline-flex px-3 py-2 rounded-md hover:bg-pink-700 transition"
+                            className="inline-flex px-3 py-2 rounded-md hover:bg-blue-500 transition"
                         >
                             Log In
                         </Link>
@@ -125,7 +125,7 @@ const Navbar = () => {
                     {/* Mobile Cart */}
                     <Link
                         to="/cart"
-                        className="inline-flex items-center px-3 py-2 rounded-md hover:bg-pink-700 transition relative"
+                        className="inline-flex items-center px-3 py-2 rounded-md hover:bg-blue-500 transition relative"
                         onClick={() => setMenuOpen(false)}
                     >
                         <FaCartShopping size={20} />

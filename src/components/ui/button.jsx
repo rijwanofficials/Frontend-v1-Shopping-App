@@ -1,8 +1,8 @@
 const STYLES_MAPPING = {
     primary:
-        "text-white px-2 py-1 rounded-md bg-pink-950 hover:bg-pink-700",
+        "text-white px-2 py-1 rounded-md bg-blue-600 hover:bg-blue-500",
     "outline-primary":
-        "border border-red-500 text-black/90 px-2 py-1 rounded-md hover:bg-red-500 hover:text-white/90"
+        "border border-blue-500 text-black/90 px-2 py-1 rounded-md hover:bg-blue-600 hover:text-white/90"
 };
 
 const Button = ({ children, className = "", onClick, variant = "primary" }) => {

@@ -140,7 +140,7 @@ const SearchPage = () => {
                                         key={pageNum}
                                         onClick={() => setPage(pageNum)}
                                         className={`px-3 py-1 rounded-md border ${pageNum === page
-                                            ? "bg-pink-950 text-white"
+                                            ? "bg-blue-600 text-white"
                                             : "bg-white text-black hover:bg-gray-200 hover:cursor-pointer"
                                             } w-[18%] sm:w-auto`}
                                     >

@@ -8,7 +8,6 @@ const InfiniteCarousel = ({ items, visibleCount = 4, delay = 3000 }) => {
     const totalItems = items.length;
     const cardWidthPercent = 100 / visibleCount;
 
-    // Duplicate items for infinite scroll effect
     const displayItems = [...items, ...items];
 
     useEffect(() => {
@@ -28,8 +27,8 @@ const InfiniteCarousel = ({ items, visibleCount = 4, delay = 3000 }) => {
     };
 
     return (
-        <div className="w-full min-h-[400px] bg-gray-100/90 flex flex-col items-center justify-center overflow-hidden">
-            <h1 className="text-3xl font-bold mb-6">Popular Products</h1>
+        <div className="w-full min-h-[400px] flex flex-col items-center justify-center overflow-hidden">
+            <h1 className="text-3xl font-bold mb-6 text-blue-600">Popular Categories</h1>
             <div className="w-full overflow-hidden">
                 <div
                     ref={carouselRef}
