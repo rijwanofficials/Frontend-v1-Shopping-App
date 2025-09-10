@@ -63,7 +63,7 @@ export default function Signup() {
         <div className="min-h-screen flex justify-center items-center px-4 sm:px-6 lg:px-8">
             {!islogin ? (
                 <div className="bg-white/10 shadow-md rounded-lg w-full max-w-md px-6 py-8">
-                    <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 text-blue-600">
                         Create Account
                     </h2>
 
@@ -76,7 +76,7 @@ export default function Signup() {
                                 <div className="flex flex-col">
                                     <label className="mb-1 text-sm sm:text-base">Email</label>
                                     <input
-                                        className="border-2 border-gray-400/70 focus:outline-none focus:border-pink-600 rounded-md px-3 py-2 w-full placeholder-gray-400 text-sm sm:text-base"
+                                        className="border-2 border-gray-400/70 focus:outline-none focus:border-blue-600 rounded-md px-3 py-2 w-full placeholder-gray-400 text-sm sm:text-base"
                                         type="email"
                                         placeholder="Enter your email"
                                         value={email}
@@ -90,7 +90,7 @@ export default function Signup() {
                                     disabled={sendingOtp}
                                     className={`text-white w-full py-2 rounded-md transition text-sm sm:text-base ${sendingOtp
                                             ? "bg-gray-500 cursor-not-allowed"
-                                            : "bg-pink-950 hover:bg-pink-700"
+                                            : "bg-blue-600 hover:bg-blue-700"
                                         }`}
                                 >
                                     {sendingOtp ? "Sending..." : "Send OTP"}
@@ -108,7 +108,7 @@ export default function Signup() {
                                 <div className="flex flex-col">
                                     <label className="mb-1 text-sm sm:text-base">OTP</label>
                                     <input
-                                        className="border-2 border-gray-400/70 focus:outline-none focus:border-pink-600 rounded-md px-3 py-2 w-full text-sm sm:text-base"
+                                        className="border-2 border-gray-400/70 focus:outline-none focus:border-blue-600 rounded-md px-3 py-2 w-full text-sm sm:text-base"
                                         type="text"
                                         placeholder="Enter OTP"
                                         value={otp}
@@ -144,7 +144,7 @@ export default function Signup() {
                     <h1 className="text-lg sm:text-xl font-medium text-center">
                         Welcome to My Shopping App:
                     </h1>
-                    <p className="text-base sm:text-lg font-bold text-pink-900 break-words text-center">
+                    <p className="text-base sm:text-lg font-bold text-blue-600 break-words text-center">
                         {email}
                     </p>
                 </div>

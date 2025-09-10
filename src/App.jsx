@@ -10,6 +10,7 @@ import { useAuthContext } from "./Context/AppContext";
 import { BasicLayout } from "./pages/BasicLayout";
 import CartPage from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
+import AboutPage from "./pages/AboutPage";
 
 const App = () => {
   const { apploading, isLoggedIn } = useAuthContext();
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/view/:id" element={<ViewPage />} />
+            <Route path="/about" element={<AboutPage />} />
           </Route>
           <Route path="/*" element={<PageNotFound />} />
         </Routes>
@@ -46,6 +48,7 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Route>
         <Route path="/*" element={<PageNotFound />} />
       </Routes>

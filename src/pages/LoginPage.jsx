@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useAuthContext } from "../Context/AppContext";
 import { ShowErrorToast, ShowSuccessToast } from "../utils/ToastMessageHelper";
-import Navbar from "../Components/Navbar"; // your navbar component
 
 const LoginPage = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -65,7 +64,7 @@ const LoginPage = () => {
                             <div className="flex flex-col gap-1 w-full">
                                 <label className="text-sm sm:text-base">Email</label>
                                 <input
-                                    className="border-2 border-gray-400/70 focus:outline-none focus:border-pink-600 rounded-md px-3 py-2 w-full placeholder-gray-400 text-sm sm:text-base"
+                                    className="border-2 border-gray-400/70 focus:outline-none focus:border-blue-600 rounded-md px-3 py-2 w-full placeholder-gray-400 text-sm sm:text-base"
                                     type="email"
                                     name="email"
                                     placeholder="Enter your email"
@@ -77,7 +76,7 @@ const LoginPage = () => {
                             <div className="flex flex-col gap-1 w-full">
                                 <label className="text-sm sm:text-base">Password</label>
                                 <input
-                                    className="border-2 border-gray-400/70 focus:outline-none focus:border-pink-600 rounded-md px-3 py-2 w-full placeholder-gray-400 text-sm sm:text-base"
+                                    className="border-2 border-gray-400/70 focus:outline-none focus:border-blue-600 rounded-md px-3 py-2 w-full placeholder-gray-400 text-sm sm:text-base"
                                     type="password"
                                     name="password"
                                     placeholder="Enter your password"
@@ -89,7 +88,7 @@ const LoginPage = () => {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="text-white cursor-pointer w-full py-2 rounded-md bg-pink-950 hover:bg-pink-700 transition text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="text-white cursor-pointer w-full py-2 rounded-md bg-blue-600 hover:bg-blue-500 transition text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isLoading ? "Logging..." : "Log In"}
                             </button>

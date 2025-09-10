@@ -3,10 +3,9 @@ import visa from "../assets/images/visa.png";
 import playstore from "../assets/images/playstore.png";
 import rupay from "../assets/images/rupay.png";
 import Logo from "../assets/images/Logo.png";
-
-
-import Beauty from '../assets/beauty.jpg';
+import { useNavigate } from "react-router";
 const Footer = () => {
+    const navigate = useNavigate();
     return (
         <footer className="bg-gray-800 text-gray-200 mt-12 font-sans">
 
@@ -15,7 +14,9 @@ const Footer = () => {
                 <div>
                     <h3 className="font-bold text-gray-100 mb-4 text-sm uppercase tracking-wide">Get to Know Us</h3>
                     <ul className="space-y-2 text-gray-300 text-sm">
-                        <li className="hover:text-white cursor-pointer transition-colors duration-200">About Us</li>
+                        <li className="hover:text-white cursor-pointer transition-colors duration-200"
+                            onClick={() => navigate("/about")}
+                        >About Us</li>
                         <li className="hover:text-white cursor-pointer transition-colors duration-200">Careers</li>
                         <li className="hover:text-white cursor-pointer transition-colors duration-200">Press Releases</li>
                         <li className="hover:text-white cursor-pointer transition-colors duration-200">Blog</li>

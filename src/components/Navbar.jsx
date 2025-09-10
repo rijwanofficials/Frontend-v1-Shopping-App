@@ -51,7 +51,7 @@ const Navbar = () => {
                                 rounded-md
                                 bg-white text-black
                                 placeholder:text-gray-400
-                                focus:outline-none focus:ring-2 focus:ring-pink-950 focus:ring-offset-1
+                                focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1
                                 transition-all duration-200
                                 sm:text-sm md:text-base"
                         />
