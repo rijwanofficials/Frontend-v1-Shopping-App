@@ -110,7 +110,7 @@ const Navbar = () => {
                             to="/my-orders"
                             className="w-auto self-start px-3 py-2 rounded-md hover:bg-blue-500 transition text-white"
                         >
-                            My Orders
+                            Orders
                         </Link>
                     )}
 
