@@ -7,13 +7,14 @@ import Beauty from '../assets/beauty.jpg';
 import Kitchen from '../assets/kitchen.jpg';
 import Furniture from '../assets/furniture.jpg';
 import Grocery from '../assets/grocery1.png';
-import InfiniteCarousel from "../components/ui/crousel";
+
 
 import mobile1 from '../assets/corousal/phone.jpg';
 import kitchen2 from '../assets/corousal/kitchen3.jpg';
 import laptop from '../assets/corousal/laptop.jpeg';
 import fashion3 from '../assets/corousal/fashion3.jpg';
 import gaming from '../assets/corousal/gaming.jpg';
+import { Carousel } from "../components/ui/Carousel";
 
 const carouselItems = [
     { img: mobile1, title: "Mobile Phones", subtitle: "Latest smartphones" },
@@ -112,7 +113,7 @@ const HomePage = () => {
                     <h1 className="text-3xl font-bold mb-2">Mega Sale! Up to 50% Off</h1>
                     <p className="text-lg">Grab the latest gadgets, fashion, and more.</p>
                     <button className="mt-4 bg-white text-blue-600 px-6 py-2 rounded font-medium hover:bg-gray-100 hover:cursor-pointer transition"
-                        onClick={() =>navigate("/search")}
+                        onClick={() => navigate("/search")}
                     >
                         Shop Now
                     </button>
@@ -120,7 +121,7 @@ const HomePage = () => {
 
                 {/* --- Carousel Section --- */}
                 <div className="w-full min-h-[400px] bg-gray-100 flex items-center justify-center mt-6">
-                    <InfiniteCarousel items={carouselItems} visibleCount={4} delay={3000} />
+                    <Carousel items={carouselItems} visibleCount={4} delay={3000} />
                 </div>
 
                 {/* --- Featured Products Section --- */}

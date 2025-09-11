@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const InfiniteCarousel = ({ items, visibleCount = 4, delay = 3000 }) => {
+const Carousel = ({ items, visibleCount = 4, delay = 3000 }) => {
     const [index, setIndex] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(true);
     const carouselRef = useRef(null);
@@ -60,4 +60,4 @@ const InfiniteCarousel = ({ items, visibleCount = 4, delay = 3000 }) => {
     );
 };
 
-export default InfiniteCarousel;
+export {Carousel};
