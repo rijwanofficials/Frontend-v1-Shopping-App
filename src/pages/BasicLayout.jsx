@@ -5,7 +5,6 @@ import Navbar from "../components/Navbar";
 const BasicLayout = () => {
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-gray-100">
-            {/* Navbar always fixed at the top */}
             <header className="sticky top-0 z-50 shadow-md">
                 <Navbar />
             </header>

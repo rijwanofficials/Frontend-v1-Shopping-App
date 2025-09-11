@@ -7,10 +7,10 @@ import { AppContextProvider } from "./Context/AppContext";
 
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  // <StrictMode>
     <AppContextProvider>
       <App />
       <ToastContainer />
     </AppContextProvider>
-  </StrictMode>
+  /* </StrictMode> */
 );

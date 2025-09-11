@@ -127,7 +127,7 @@ const AddressPage = ({ onSubmit }) => {
                     {/* Save Address Button */}
                     <Button
                         type="submit"
-                        className="text-white w-full py-2 rounded-md bg-pink-950 hover:bg-pink-700 transition text-sm"
+                        className="text-white w-full py-2 rounded-md bg-blue-600 hover:bg-blue-500 transition text-sm"
                     >
                         Save Address
                     </Button>
