@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router";
-import HomePage from "./pages/HomePage";
+import { HomePage } from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
 import ViewPage from "./pages/ViewPage";
 import PageNotFound from "./pages/PageNotFound";

@@ -5,7 +5,7 @@ const AuthContext = createContext();
 
 const AppContextProvider = ({ children }) => {
     const [user, setUser] = useState({ isLoggedIn: false });
-    const [apploading, setAppLoading] = useState(true);
+    const [appLoading, setAppLoading] = useState(true);
     const [cart, setCart] = useState([]);
     const [cartLoading, setCartLoading] = useState(false); // for getCartItems
     const [addingItems, setAddingItems] = useState({});
@@ -22,7 +22,6 @@ const AppContextProvider = ({ children }) => {
                 method: "GET",
                 credentials: "include",
             });
-
             if (response.status === 200) {
                 const result = await response.json();
                 setUser({ ...result.data.user, isLoggedIn: true });
@@ -178,7 +177,7 @@ const AppContextProvider = ({ children }) => {
     const handleSetUser = (data) => setUser(data);
 
     const sharedValues = {
-        apploading,
+        appLoading,
         isLoggedIn,
         user,
         handleSetUser,
