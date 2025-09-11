@@ -1,9 +1,9 @@
 import { Link, Outlet, useLocation } from "react-router";
-import { useAdminContext } from "../../Context/AdminCOntext";
+import { useAdminContext } from "../../Context/AdminContext";
 import { ClipLoader } from "react-spinners";
 
 
-const ROUTES_CONGIF = [
+const ROUTES_CONFIG = [
     {
         title: "Dashboard",
         routes: "/admin/dashboard"
@@ -35,12 +35,12 @@ const AdminLayout = () => {
         </div>
     }
 
-    if (!adminUser ||adminUser.isLoggedIn) {
+    if (!adminUser || adminUser.isLoggedIn) {
         return (
             <div>
                 <div className="grid grid-cols-[234px_1fr]">
                     <div className="flex flex-col gap-5 p-5 bg-amber-200 min-h-screen">
-                        {ROUTES_CONGIF.map((elem) => {
+                        {ROUTES_CONFIG.map((elem) => {
                             const isCurritem = pathname == elem.routes
                             return (
                                 <Link className={`text-xl text-blue-600 font-bold transition px-2 py-1 w-fit rounded-md

@@ -16,8 +16,8 @@ import { AdminDashboard } from './pages/Admin/AdminDashboard';
 import { AdminOrdersPage } from './pages/Admin/AdminOrdersPage';
 import { AdminFeedbackPage } from "./pages/Admin/AdminFeedback";
 import { AdminProductPage } from "./pages/Admin/AdminProductPage";
-import { AdminContextProvider } from "./Context/AdminCOntext";
 import { MyOrders } from "./pages/MyOrders";
+import { AdminContextProvider } from "./Context/AdminContext";
 
 
 
@@ -58,7 +58,7 @@ const App = () => {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/my-orders" element={<MyOrders/>} />
+          <Route path="/my-orders" element={<MyOrders />} />
         </Route>
         <Route path="/admin" element={
           <AdminContextProvider>
