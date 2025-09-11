@@ -11,6 +11,14 @@ import { BasicLayout } from "./pages/BasicLayout";
 import CartPage from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
 import AboutPage from "./pages/AboutPage";
+import { AdminLayout } from './pages/Admin/AdminLayout';
+import { AdminDashboard } from './pages/Admin/AdminDashboard';
+import { AdminOrdersPage } from './pages/Admin/AdminOrdersPage';
+import { AdminFeedbackPage } from "./pages/Admin/AdminFeedback";
+import { AdminProductPage } from "./pages/Admin/AdminProductPage";
+import { AdminContextProvider } from "./Context/AdminCOntext";
+
+
 
 const App = () => {
   const { apploading, isLoggedIn } = useAuthContext();
@@ -39,19 +47,27 @@ const App = () => {
   }
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<BasicLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/view/:id" element={<ViewPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/about" element={<AboutPage />} />
-        </Route>
-        <Route path="/*" element={<PageNotFound />} />
-      </Routes>
+      <AdminContextProvider>
+        <Routes>
+          <Route element={<BasicLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/view/:id" element={<ViewPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/about" element={<AboutPage />} />
+          </Route>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="orders" element={<AdminOrdersPage />} />
+            <Route path="feedback" element={<AdminFeedbackPage />} />
+            <Route path="products" element={<AdminProductPage />} />
+          </Route>
+          <Route path="/*" element={<PageNotFound />} />
+        </Routes>
+      </AdminContextProvider>
     </BrowserRouter>
   );
 };
