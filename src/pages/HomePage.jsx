@@ -93,8 +93,7 @@ const HomePage = () => {
                 </div>
 
                 {/* --- Carousel Section --- */}
-
-                <div className="w-full min-h-[400px] bg-gray-100 flex items-center justify-center mt-6 mb-1">
+                <div className="mx-6 mb-6 p-6">
                     <Carousel items={carouselItems} visibleCount={4} delay={3000} />
                 </div>
 

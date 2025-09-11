@@ -27,7 +27,7 @@ const Carousel = ({ items, visibleCount = 4, delay = 3000 }) => {
     };
 
     return (
-        <div className="w-full min-h-[400px] flex flex-col items-center justify-center overflow-hidden">
+        <div className="w-full min-h-[400px] flex flex-col items-center overflow-hidden pb-6">
             <h1 className="text-3xl font-bold mb-6 text-blue-600">Popular Categories</h1>
             <div className="w-full overflow-hidden">
                 <div
@@ -42,7 +42,7 @@ const Carousel = ({ items, visibleCount = 4, delay = 3000 }) => {
                     {displayItems.map((item, idx) => (
                         <div
                             key={idx}
-                            className="mx-2 bg-white p-6 rounded-lg shadow-lg flex-shrink-0"
+                            className="mx-2 bg-white p-6 rounded-lg shadow-xs flex-shrink-0 mb-6"
                             style={{ width: `${cardWidthPercent}%` }}
                         >
                             <img
@@ -60,4 +60,4 @@ const Carousel = ({ items, visibleCount = 4, delay = 3000 }) => {
     );
 };
 
-export {Carousel};
+export { Carousel };
