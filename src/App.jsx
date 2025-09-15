@@ -6,7 +6,6 @@ import PageNotFound from "./pages/PageNotFound";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import { ClipLoader } from "react-spinners";
-import { useAuthContext } from "./Context/AppContext";
 import { BasicLayout } from "./pages/BasicLayout";
 import CartPage from "./pages/CartPage";
 import { CheckoutPage } from "./pages/CheckoutPage";
@@ -18,6 +17,7 @@ import { AdminFeedbackPage } from "./pages/Admin/AdminFeedback";
 import { AdminProductPage } from "./pages/Admin/AdminProductPage";
 import { MyOrders } from "./pages/MyOrders";
 import { AdminContextProvider } from "./Context/AdminContext";
+import { useAuthContext } from "./Context/AppContext";
 
 
 

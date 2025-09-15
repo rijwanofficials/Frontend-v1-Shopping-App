@@ -18,22 +18,18 @@ const LoginPage = () => {
             setIsLoading(true);
             const emailInput = e.target.email.value;
             const password = e.target.password.value;
-
             const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/Login`, {
                 method: "POST",
                 body: JSON.stringify({ email: emailInput, password }),
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
             });
-
             const result = await response.json();
-
             if (response.status === 201) {
                 ShowSuccessToast("User Logged In Successfully");
                 setEmail(emailInput);
                 setIsLoggedIn(true);
                 handleSetUser({ isLoggedIn: true, ...result.data });
-
                 const redirectTo = searchParams.get("redirect") || "/";
                 navigate(redirectTo, { replace: true });
             } else {
