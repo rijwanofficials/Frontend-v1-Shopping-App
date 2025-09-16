@@ -37,7 +37,7 @@ const AppContextProvider = ({ children }) => {
 
     useEffect(() => {
         getUserLoggedIn();
-    }, []);
+    }, [user.isLoggedIn]);
 
 
     useEffect(() => {
