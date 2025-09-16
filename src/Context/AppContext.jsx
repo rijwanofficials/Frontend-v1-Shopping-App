@@ -39,9 +39,7 @@ const AppContextProvider = ({ children }) => {
 
   useEffect(() => {
     // Only run if user.isLoggedIn is true (e.g., after successful login)
-    if (user.isLoggedIn) {
       getUserLoggedIn();
-    }
   }, [user.isLoggedIn]);
 
   useEffect(() => {
