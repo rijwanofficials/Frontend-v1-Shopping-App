@@ -87,7 +87,7 @@ const LoginPage = () => {
                                 disabled={isLoading}
                                 className="text-white cursor-pointer w-full py-2 rounded-md bg-blue-600 hover:bg-blue-500 transition text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {isLoading ? <ClipLoader /> : "Log In"}
+                                {isLoading ? <ClipLoader size={22}/> : "Log In"}
                             </button>
 
                             <p className="text-xs sm:text-sm text-gray-700 mt-3 text-center">
