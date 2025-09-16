@@ -9,15 +9,14 @@ const ShimmerBox = ({ className }) => (
 const HomePageShimmer = () => {
     return (
         <div>
-            {/* Navbar Shimmer */}
-            <header className="sticky top-0 z-50 bg-gray-300 p-4 flex items-center justify-between animate-pulse">
+            {/* <header className="sticky top-0 z-50 bg-gray-300 p-4 flex items-center justify-between animate-pulse">
                 <div className="w-24 h-6 bg-gray-400 rounded"></div>
                 <div className="flex gap-2">
                     <div className="w-20 h-4 bg-gray-400 rounded"></div>
                     <div className="w-20 h-4 bg-gray-400 rounded"></div>
                     <div className="w-8 h-8 bg-gray-400 rounded-full"></div>
                 </div>
-            </header>
+            </header> */}
 
             {/* Category Section Shimmer */}
             <div className="flex flex-wrap gap-6 justify-center items-center p-3 bg-gray-100">
