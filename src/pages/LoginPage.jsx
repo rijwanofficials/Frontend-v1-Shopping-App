@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useAuthContext } from "../Context/AppContext";
 import { ShowErrorToast, ShowSuccessToast } from "../utils/ToastMessageHelper";
+import { ClipLoader } from "react-spinners";
 
 const LoginPage = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -86,7 +87,7 @@ const LoginPage = () => {
                                 disabled={isLoading}
                                 className="text-white cursor-pointer w-full py-2 rounded-md bg-blue-600 hover:bg-blue-500 transition text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {isLoading ? "Logging..." : "Log In"}
+                                {isLoading ? <ClipLoader /> : "Log In"}
                             </button>
 
                             <p className="text-xs sm:text-sm text-gray-700 mt-3 text-center">
