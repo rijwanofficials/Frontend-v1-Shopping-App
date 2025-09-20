@@ -36,7 +36,9 @@ const AdminContextProvider = ({ children }) => {
         getAdminLoggedIn
     };
 
-    return <AdminContext.Provider value={sharedValues}>{children}</AdminContext.Provider>;
+
+   
+        return <AdminContext.Provider value={sharedValues}>{children}</AdminContext.Provider>;
 };
 
 const useAdminContext = () => useContext(AdminContext);

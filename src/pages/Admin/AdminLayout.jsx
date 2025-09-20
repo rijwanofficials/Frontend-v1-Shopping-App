@@ -35,7 +35,7 @@ const AdminLayout = () => {
         </div>
     }
 
-    if (!adminUser || adminUser.isLoggedIn) {
+    if (adminUser.isLoggedIn) {
         return (
             <div>
                 <div className="grid grid-cols-[234px_1fr]">
