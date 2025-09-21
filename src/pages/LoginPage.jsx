@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useAuthContext } from "../Context/AppContext";
 import { ShowErrorToast, ShowSuccessToast } from "../utils/ToastMessageHelper";
@@ -46,15 +46,14 @@ const LoginPage = () => {
     }
   };
 
-useEffect(() => {
-  const timer = setTimeout(() => {
-    if (isLoggedIn) {
-      navigate("/");
-    }
-  }, 4000);
-  return () => clearTimeout(timer);
-}, [isLoggedIn, navigate]);
-
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (isLoggedIn) {
+        navigate("/");
+      }
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [isLoggedIn, navigate]);
 
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
@@ -92,15 +91,12 @@ useEffect(() => {
                 className="text-white cursor-pointer w-full py-2 rounded-md bg-blue-600 hover:bg-blue-500 transition text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
-                  <div
-                    className="flex items-center justify-center"
-                    style={{ height: "20px", width: "20px" }}
-                  >
-                    <ClipLoader size={20} />
+                  <div className="flex items-center justify-center w-full h-full">
+                    <ClipLoader size={20} color="white" />
                   </div>
                 ) : (
                   "Log In"
-                )}{" "}
+                )}
               </button>
 
               <p className="text-xs sm:text-sm text-gray-700 mt-3 text-center">
