@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useAuthContext } from "../Context/AppContext";
 import { ShowErrorToast, ShowSuccessToast } from "../utils/ToastMessageHelper";
@@ -46,14 +46,15 @@ const LoginPage = () => {
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
+  const timer = setTimeout(() => {
     if (isLoggedIn) {
-      const timer = setTimeout(() => {
-        navigate("/");
-      }, 4000);
-      return () => clearTimeout(timer);
+      navigate("/");
     }
-  }, [isLoggedIn, navigate]);
+  }, 4000);
+  return () => clearTimeout(timer);
+}, [isLoggedIn, navigate]);
+
 
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">

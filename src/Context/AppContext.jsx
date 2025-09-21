@@ -36,17 +36,15 @@ const AppContextProvider = ({ children }) => {
       setAppLoading(false);
     }
   };
-
+  
   useEffect(() => {
       getUserLoggedIn();
-  }, [user.isLoggedIn]);
-
+  }, []);
+  
   useEffect(() => {
-    if (isLoggedIn) {
       getCartItems();
-    }
-  }, [cartVersion, isLoggedIn]);
-
+  }, [cartVersion]);
+  
   const handleLogOutClick = async () => {
     try {
       const response = await fetch(
@@ -69,7 +67,7 @@ const AppContextProvider = ({ children }) => {
       ShowErrorToast(`Error during logout: ${err.message}`);
     }
   };
-
+  
   const getCartItems = async () => {
     setCartLoading(true); // start loader
     try {
@@ -94,7 +92,7 @@ const AppContextProvider = ({ children }) => {
       setCartLoading(false); // stop loader
     }
   };
-
+  
   const addtoCart = async (productId) => {
     setAddingItems((prev) => ({ ...prev, [productId]: true }));
 
@@ -121,7 +119,7 @@ const AppContextProvider = ({ children }) => {
       setCartVersion((prev) => prev + 1);
     }
   };
-
+    
   const removeFromCart = async (productId) => {
     setRemovingItems((prev) => ({ ...prev, [productId]: true }));
     try {
@@ -161,7 +159,7 @@ const AppContextProvider = ({ children }) => {
       setRemovingItems((prev) => ({ ...prev, [productId]: false }));
     }
   };
-
+  
   const handleCheckout = async (address) => {
     console.log("Sending order with address:", address); // 🔹 Check address structure
     setPlacingOrder(true);
@@ -190,9 +188,9 @@ const AppContextProvider = ({ children }) => {
       // window.location.reload();
     }
   };
-
+  
   const handleSetUser = (data) => setUser(data);
-
+  
   const sharedValues = {
     appLoading,
     isLoggedIn,
@@ -209,7 +207,7 @@ const AppContextProvider = ({ children }) => {
     placingOrder,
     getCartItems,
   };
-
+  
   return (
     <AuthContext.Provider value={sharedValues}>{children}</AuthContext.Provider>
   );
