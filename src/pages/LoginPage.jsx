@@ -88,15 +88,9 @@ const LoginPage = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="text-white cursor-pointer w-full py-2 rounded-md bg-blue-600 hover:bg-blue-500 transition text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center text-white cursor-pointer w-full py-2 rounded-md bg-blue-600 hover:bg-blue-500 transition text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? (
-                  <div className="flex items-center justify-center w-full h-full">
-                    <ClipLoader size={20} color="white" />
-                  </div>
-                ) : (
-                  "Log In"
-                )}
+                {isLoading ? <ClipLoader size={20} color="white" /> : "Log In"}
               </button>
 
               <p className="text-xs sm:text-sm text-gray-700 mt-3 text-center">
