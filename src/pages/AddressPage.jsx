@@ -1,140 +1,265 @@
-import { useState } from "react";
-import Button from "../components/ui/button";
+import  { useState } from "react";
+import { useNavigate } from "react-router";
 
 const AddressPage = ({ onSubmit }) => {
-    const [fullName, setFullName] = useState("");
-    const [phoneNumber, setPhone] = useState("");
-    const [street, setStreet] = useState("");
-    const [city, setCity] = useState("");
-    const [state, setState] = useState("");
-    const [zipCode, setZip] = useState("");
-    const [country, setCountry] = useState("");
+    const navigate = useNavigate();
+  const [address, setAddress] = useState({
+    fullName: "",
+    countryCode: "+91", // default India
+    phoneNumber: "",
+    street: "",
+    city: "",
+    region: "",
+    zipCode: "",
+    country: "",
+  });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Create the address object from state
-        const address = {
-            fullName,
-            phoneNumber,
-            street,
-            city,
-            state,
-            zipCode,
-            country,
-        };
-        console.log("address✅", address);
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
 
-        if (onSubmit) {
-            onSubmit(address); // send the address to parent
-        }
-    };
+  // handle all input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setAddress((prev) => ({ ...prev, [name]: value }));
+  };
 
-    return (
-        <div className="px-4 sm:px-6 lg:px-8">
-            <form onSubmit={handleSubmit}>
-                <div className="flex flex-col gap-4 w-full max-w-md mx-auto px-6 py-10 bg-white/10 shadow-md mt-20 rounded-lg">
+  // handle phone number only digits
+  const handlePhoneChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ""); // only digits
+    setAddress((prev) => ({ ...prev, phoneNumber: value }));
+  };
 
-                    {/* Full Name */}
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm">Full Name</label>
-                        <input
-                            type="text"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
-                            className="border-2 border-gray-400/70 rounded-md px-3 py-2 text-sm"
-                            placeholder="Enter full name"
-                            required
-                        />
-                    </div>
+  // validation function
+  const validate = () => {
+    
+    const newErrors = {};
+    if (!address.fullName) newErrors.fullName = "Full name is required";
+    if (!address.street) newErrors.street = "Street address is required";
+    if (!address.city) newErrors.city = "City is required";
+    if (!address.region) newErrors.region = "State/Province is required";
+    if (!address.zipCode) newErrors.zipCode = "ZIP/Postal code is required";
+    if (!address.country) newErrors.country = "Country is required";
 
-                    {/* Phone Number */}
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm">Phone Number</label>
-                        <input
-                            type="tel"
-                            value={phoneNumber}
-                            onChange={(e) => setPhone(e.target.value)}
-                            className="border-2 border-gray-400/70 rounded-md px-3 py-2 text-sm"
-                            placeholder="Enter phone number"
-                            required
-                        />
-                    </div>
-
-                    {/* Street */}
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm">Street Address</label>
-                        <input
-                            type="text"
-                            value={street}
-                            onChange={(e) => setStreet(e.target.value)}
-                            className="border-2 border-gray-400/70 rounded-md px-3 py-2 text-sm"
-                            placeholder="Enter street address"
-                            required
-                        />
-                    </div>
-
-                    {/* City */}
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm">City</label>
-                        <input
-                            type="text"
-                            value={city}
-                            onChange={(e) => setCity(e.target.value)}
-                            className="border-2 border-gray-400/70 rounded-md px-3 py-2 text-sm"
-                            placeholder="Enter city"
-                            required
-                        />
-                    </div>
-
-                    {/* State */}
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm">State</label>
-                        <input
-                            type="text"
-                            value={state}
-                            onChange={(e) => setState(e.target.value)}
-                            className="border-2 border-gray-400/70 rounded-md px-3 py-2 text-sm"
-                            placeholder="Enter state"
-                            required
-                        />
-                    </div>
-
-                    {/* ZIP */}
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm">ZIP Code</label>
-                        <input
-                            type="text"
-                            value={zipCode}
-                            onChange={(e) => setZip(e.target.value)}
-                            className="border-2 border-gray-400/70 rounded-md px-3 py-2 text-sm"
-                            placeholder="Enter zip code"
-                            required
-                        />
-                    </div>
-
-                    {/* Country */}
-                    <div className="flex flex-col gap-1">
-                        <label className="text-sm">Country</label>
-                        <input
-                            type="text"
-                            value={country}
-                            onChange={(e) => setCountry(e.target.value)}
-                            className="border-2 border-gray-400/70 rounded-md px-3 py-2 text-sm"
-                            placeholder="Enter country"
-                        />
-                    </div>
-
-                    {/* Save Address Button */}
-                    <Button
-                        type="submit"
-                        className="text-white w-full py-2 rounded-md bg-blue-600 hover:bg-blue-500 transition text-sm"
-                    >
-                        Save Address
-                    </Button>
-                </div>
-            </form>
-        </div>
+    // phone validation
+    const fullPhone = `${address.countryCode}${address.phoneNumber}`.replace(
+      /\s+/g,
+      ""
     );
+    if (!/^\+\d{1,3}\d{7,12}$/.test(fullPhone)) {
+      newErrors.phoneNumber = "Enter a valid phone number";
+    }
+
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+
+    const validationErrors = validate();
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      if (onSubmit) onSubmit(address);
+        navigate("/checkout", { state: { address } });
+      console.log("Submitted Address:", address);
+    }
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">
+        Shipping Address
+      </h2>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Full Name */}
+        <div>
+          <label
+            htmlFor="fullName"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Full Name
+          </label>
+          <input
+            id="fullName"
+            name="fullName"
+            type="text"
+            value={address.fullName}
+            onChange={handleChange}
+            autoComplete="name"
+            className="mt-1 block w-full border-2 border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+            required
+          />
+          {submitted && errors.fullName && (
+            <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
+          )}
+        </div>
+
+        {/* Phone Number with Country Code */}
+        <div>
+          <label
+            htmlFor="phoneNumber"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Phone Number
+          </label>
+          <div className="flex gap-2 mt-1">
+            <select
+              name="countryCode"
+              value={address.countryCode}
+              onChange={handleChange}
+              className="border-2 border-gray-300 rounded-md px-2 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              <option value="+91">🇮🇳 +91</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+61">🇦🇺 +61</option>
+              <option value="+971">🇦🇪 +971</option>
+            </select>
+            <input
+              id="phoneNumber"
+              name="phoneNumber"
+              type="tel"
+              value={address.phoneNumber}
+              onChange={handlePhoneChange}
+              placeholder="1234567890"
+              autoComplete="tel"
+              className="flex-1 border-2 border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          {submitted && errors.phoneNumber && (
+            <p className="text-red-500 text-xs mt-1">{errors.phoneNumber}</p>
+          )}
+        </div>
+
+        {/* Street Address */}
+        <div>
+          <label
+            htmlFor="street"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Street Address
+          </label>
+          <input
+            id="street"
+            name="street"
+            type="text"
+            value={address.street}
+            onChange={handleChange}
+            autoComplete="street-address"
+            className="mt-1 block w-full border-2 border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+            required
+          />
+          {submitted && errors.street && (
+            <p className="text-red-500 text-xs mt-1">{errors.street}</p>
+          )}
+        </div>
+
+        {/* City */}
+        <div>
+          <label
+            htmlFor="city"
+            className="block text-sm font-medium text-gray-700"
+          >
+            City
+          </label>
+          <input
+            id="city"
+            name="city"
+            type="text"
+            value={address.city}
+            onChange={handleChange}
+            autoComplete="address-level2"
+            className="mt-1 block w-full border-2 border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+            required
+          />
+          {submitted && errors.city && (
+            <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+          )}
+        </div>
+
+        {/* State/Province */}
+        <div>
+          <label
+            htmlFor="region"
+            className="block text-sm font-medium text-gray-700"
+          >
+            State / Province
+          </label>
+          <input
+            id="region"
+            name="region"
+            type="text"
+            value={address.region}
+            onChange={handleChange}
+            autoComplete="address-level1"
+            className="mt-1 block w-full border-2 border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+            required
+          />
+          {submitted && errors.region && (
+            <p className="text-red-500 text-xs mt-1">{errors.region}</p>
+          )}
+        </div>
+
+        {/* ZIP / Postal Code */}
+        <div>
+          <label
+            htmlFor="zipCode"
+            className="block text-sm font-medium text-gray-700"
+          >
+            ZIP / Postal Code
+          </label>
+          <input
+            id="zipCode"
+            name="zipCode"
+            type="text"
+            value={address.zipCode}
+            onChange={handleChange}
+            autoComplete="postal-code"
+            className="mt-1 block w-full border-2 border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+            required
+          />
+          {submitted && errors.zipCode && (
+            <p className="text-red-500 text-xs mt-1">{errors.zipCode}</p>
+          )}
+        </div>
+
+        {/* Country */}
+        <div>
+          <label
+            htmlFor="country"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Country
+          </label>
+          <input
+            id="country"
+            name="country"
+            type="text"
+            value={address.country}
+            onChange={handleChange}
+            autoComplete="country-name"
+            className="mt-1 block w-full border-2 border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+            required
+          />
+          {submitted && errors.country && (
+            <p className="text-red-500 text-xs mt-1">{errors.country}</p>
+          )}
+        </div>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md font-medium transition"
+        >
+          Continue to Checkout
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default AddressPage;

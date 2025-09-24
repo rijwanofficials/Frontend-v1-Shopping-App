@@ -8,7 +8,7 @@ const CartPage = () => {
 
     const goToAddressPage = async () => {
         if (!isLoggedIn) {
-            navigate("/login?redirect=/checkout");
+            navigate("/login?redirect=/address");
             return;
         }
 
@@ -23,7 +23,7 @@ const CartPage = () => {
             image: item.productId.images?.[0],
         }));
 
-        navigate("/checkout", { state: { cart: cartData } });
+        navigate("/address", { state: { cart: cartData } });
     };
 
     return (

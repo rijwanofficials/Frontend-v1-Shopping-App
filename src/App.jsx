@@ -18,6 +18,7 @@ import { AdminProductPage } from "./pages/Admin/AdminProductPage";
 import { MyOrders } from "./pages/MyOrders";
 import { AdminContextProvider } from "./Context/AdminContext";
 import { useAuthContext } from "./Context/AppContext";
+import AddressPage from "./pages/AddressPage";
 
 
 
@@ -57,6 +58,8 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/address" element={<AddressPage />} />
+
           <Route path="/about" element={<AboutPage />} />
           <Route path="/my-orders" element={<MyOrders />} />
         </Route>
