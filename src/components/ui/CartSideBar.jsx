@@ -46,14 +46,14 @@ const CartSideBar = () => {
     };
 
     const handleCheckout = async () => {
-        if (!isLoggedIn) {
-            ShowErrorToast("Please log in to checkout");
-            navigate("/login?redirect=/checkout");
-            return;
-        }
-        await getCartItems();
-        navigate("/checkout", { state: { cart } });
-    };
+  if (!isLoggedIn) {
+    ShowErrorToast("Please log in to checkout");
+    navigate("/login?redirect=/address"); 
+    return;
+  }
+  await getCartItems();
+  navigate("/address");
+};
 
     if (cartLoading) {
         return (
