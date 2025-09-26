@@ -13,7 +13,6 @@ const AddressPage = ({ onSubmit }) => {
     zipCode: "",
     country: "",
   });
-
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
 

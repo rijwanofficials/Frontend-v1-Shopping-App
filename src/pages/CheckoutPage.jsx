@@ -1,21 +1,15 @@
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { useAuthContext } from "../Context/AppContext";
 import Button from "../components/ui/button";
+import { useState } from "react";
 
 const CheckoutPage = () => {
-  const { cart, cartLoading } = useAuthContext();
-  const navigate = useNavigate();
+  const { cart, cartLoading, handleCheckout, placingOrder } = useAuthContext();
   const location = useLocation();
+  const [loading, setLoading] = useState(false);
 
-  // Receive address from navigation state
+  // Get address from navigation state
   const address = location.state?.address;
-
-  // Proceed to Payment Page
-  const handleProceedToPayment = () => {
-    if (address && cart && cart.length > 0) {
-      navigate("/payment", { state: { address, cart } });
-    }
-  };
 
   if (!address) {
     return (
@@ -24,6 +18,20 @@ const CheckoutPage = () => {
       </div>
     );
   }
+
+  const handleSendOrder = async () => {
+    if (!cart || cart.length === 0) return;
+
+    setLoading(true);
+    try {
+      // Send order to backend
+      await handleCheckout(address);
+    } catch (err) {
+      console.error("Checkout failed:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -34,9 +42,7 @@ const CheckoutPage = () => {
         <h3 className="font-semibold mb-1">Shipping Address</h3>
         <p>{address.fullName}</p>
         <p>{address.countryCode} {address.phoneNumber}</p>
-        <p>
-          {address.street}, {address.city}, {address.region} - {address.zipCode}
-        </p>
+        <p>{address.street}, {address.city}, {address.region} - {address.zipCode}</p>
         <p>{address.country}</p>
       </div>
 
@@ -68,24 +74,22 @@ const CheckoutPage = () => {
             <div className="flex justify-between mt-4 font-bold text-lg">
               <span>Total</span>
               <span>
-                ₹{cart.reduce(
-                  (sum, item) => sum + item.productId.price * item.cartQuantity,
-                  0
-                )}
+                ₹{cart.reduce((sum, item) => sum + item.productId.price * item.cartQuantity, 0)}
               </span>
             </div>
           </>
         )}
       </div>
 
-      {/* Proceed to Payment */}
+      {/* Send Order Button */}
       {cart && cart.length > 0 && (
         <div className="mt-6 flex justify-center">
           <Button
-            onClick={handleProceedToPayment}
-            className=" bg-blue-600 hover:bg-blue-700"
+            onClick={handleSendOrder}
+            className="bg-blue-600 hover:bg-blue-700"
+            disabled={loading || placingOrder}
           >
-            Proceed to Pay
+            {loading || placingOrder ? "Processing..." : "Send Order"}
           </Button>
         </div>
       )}

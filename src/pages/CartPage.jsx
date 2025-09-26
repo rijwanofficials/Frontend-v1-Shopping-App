@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuthContext } from "../Context/AppContext";
 import Button from "../components/ui/button";
+import { ClipLoader } from "react-spinners"; // <-- import loader
 
 const CartPage = () => {
     const { cart, isLoggedIn, getCartItems } = useAuthContext();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false); // <-- loader state
 
     const goToAddressPage = async () => {
         if (!isLoggedIn) {
@@ -12,9 +15,9 @@ const CartPage = () => {
             return;
         }
 
+        setLoading(true); // <-- show loader
         await getCartItems();
 
-        // only pass safe, serializable data
         const cartData = cart.map(item => ({
             id: item.productId._id,
             title: item.productId.title,
@@ -24,13 +27,13 @@ const CartPage = () => {
         }));
 
         navigate("/address", { state: { cart: cartData } });
+        setLoading(false); // <-- hide loader after navigation
     };
 
     return (
         <div className="flex flex-col h-fit bg-gray-50">
             <main className="flex-1 flex justify-center px-4 sm:px-6 lg:px-8 mt-6">
                 <div className="w-full max-w-2xl flex flex-col bg-white/10 shadow-md rounded-lg transition-all duration-300">
-                    {/* Title */}
                     <h1 className="text-2xl sm:text-3xl font-bold text-center text-blue-600 mt-6 mb-4">
                         🛒 Your Cart
                     </h1>
@@ -79,9 +82,12 @@ const CartPage = () => {
                     )}
                 </div>
             </main>
+
             {cart.length > 0 && (
                 <div className="flex justify-center items-center mt-4">
-                    <Button onClick={goToAddressPage}>Checkout</Button>
+                    <Button onClick={goToAddressPage} disabled={loading}>
+                        {loading ? <ClipLoader size={20} color="#fff" /> : "Checkout"}
+                    </Button>
                 </div>
             )}
         </div>

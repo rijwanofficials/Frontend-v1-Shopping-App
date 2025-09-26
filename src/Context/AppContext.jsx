@@ -160,34 +160,43 @@ const AppContextProvider = ({ children }) => {
     }
   };
   
-  const handleCheckout = async (address) => {
-    console.log("Sending order with address:", address); // 🔹 Check address structure
-    setPlacingOrder(true);
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/orders`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ address }),
-        }
-      );
+ const handleCheckout = async (address) => {
+  console.log("Sending order with address:", address); // 🔹 Check address structure
+  setPlacingOrder(true);
 
-      const result = await response.json();
-      if (response.ok) {
-        ShowSuccessToast("Order placed successfully!");
-        setCart([]);
-      } else {
-        ShowErrorToast(result.message || "Failed to place order!");
-      }
-    } catch (err) {
-      ShowErrorToast(`Error placing order: ${err.message}`);
-    } finally {
-      setPlacingOrder(false);
-      // window.location.reload();
+  try {
+    const payload = {
+      fullName: address.fullName,
+      phoneNumber: `${address.countryCode}${address.phoneNumber}`, 
+      street: address.street,
+      city: address.city,
+      state: address.region,      
+      zipCode: address.zipCode,
+      country: address.country,
+    };
+
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/orders`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ address: payload }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      ShowSuccessToast("Order placed successfully!");
+      setCart([]);
+    } else {
+      ShowErrorToast(result.message || "Failed to place order!");
     }
-  };
+  } catch (err) {
+    ShowErrorToast(`Error placing order: ${err.message}`);
+  } finally {
+    setPlacingOrder(false);
+  }
+};
+
   
   const handleSetUser = (data) => setUser(data);
   
