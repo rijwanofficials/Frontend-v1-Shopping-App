@@ -187,8 +187,10 @@ const AppContextProvider = ({ children }) => {
     if (response.ok) {
       ShowSuccessToast("Order placed successfully!");
       setCart([]);
+      return result.data.paymentDetails.payment_session_id;
     } else {
       ShowErrorToast(result.message || "Failed to place order!");
+      return null;
     }
   } catch (err) {
     ShowErrorToast(`Error placing order: ${err.message}`);

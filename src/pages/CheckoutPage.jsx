@@ -2,6 +2,9 @@ import { useLocation } from "react-router";
 import { useAuthContext } from "../Context/AppContext";
 import Button from "../components/ui/button";
 import { useState } from "react";
+import { load } from "@cashfreepayments/cashfree-js";
+import { ShowErrorToast, ShowSuccessToast } from "../utils/ToastMessageHelper";
+
 
 const CheckoutPage = () => {
   const { cart, cartLoading, handleCheckout, placingOrder } = useAuthContext();
@@ -24,16 +27,52 @@ const CheckoutPage = () => {
 
     setLoading(true);
     try {
-      // Send order to backend
-      await handleCheckout(address);
-    } catch (err) {
+    const paymentSessionId = await handleCheckout(address);
+if (paymentSessionId) {
+      console.log("paymentSessionId:", paymentSessionId);
+      // Redirect tofunction Checkout() {
+    let cashfree;
+    var initializeSDK = async function () {          
+        cashfree = await load({
+            mode: "sandbox"
+        });
+    }
+    await initializeSDK(); 
+
+    
+        let checkoutOptions = {
+            paymentSessionId: paymentSessionId,
+            redirectTarget: "_modal",
+        };
+        cashfree.checkout(checkoutOptions).then((result) => {
+            if(result.error){
+                // This will be true whenever user clicks on close icon inside the modal or any error happens during the payment
+                console.log("User has closed the popup or there is some payment error, Check for Payment Status");
+                console.log(result.error);
+                ShowErrorToast("Payment failed. Please try again.");
+            }
+            if(result.redirect){
+                // This will be true when the payment redirection page couldnt be opened in the same window
+                // This is an exceptional case only when the page is opened inside an inAppBrowser
+                // In this case the customer will be redirected to return url once payment is completed
+                console.log("Payment will be redirected");
+
+            }
+            if(result.paymentDetails){
+                // This will be called whenever the payment is completed irrespective of transaction status
+                console.log("Payment has been completed, Check for Payment Status");
+                console.log(result.paymentDetails.paymentMessage);
+                ShowSuccessToast("Payment successful! Your order has been placed.");
+            }
+        });
+    }    
+  } catch (err) {
       console.error("Checkout failed:", err);
     } finally {
       setLoading(false);
     }
   };
-
-  return (
+    return (
     <div className="min-h-screen bg-gray-100 p-6">
       <h1 className="text-2xl font-bold mb-6">Checkout</h1>
 
@@ -89,7 +128,7 @@ const CheckoutPage = () => {
             className="bg-blue-600 hover:bg-blue-700"
             disabled={loading || placingOrder}
           >
-            {loading || placingOrder ? "Processing..." : "Send Order"}
+            {loading || placingOrder ? "Processing..." : "Proceed to Pay"}
           </Button>
         </div>
       )}
