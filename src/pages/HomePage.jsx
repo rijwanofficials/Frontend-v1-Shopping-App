@@ -15,7 +15,7 @@ import fashion3 from '../assets/corousal/fashion3.jpg';
 import gaming from '../assets/corousal/gaming.jpg';
 import { Carousel } from "../components/ui/Carousel";
 import { useAuthContext } from "../Context/AppContext";
-import { HomePageShimmer } from "./Shimmer/HomePageShimmer"; // ✅ Only one shimmer
+import { HomePageShimmer } from "./Shimmer/HomePageShimmer";
 
 const carouselItems = [
     { img: mobile1, title: "Mobile Phones", subtitle: "Latest smartphones" },

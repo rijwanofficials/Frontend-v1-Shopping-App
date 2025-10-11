@@ -38,6 +38,7 @@ const SearchPage = () => {
 
     useEffect(() => {
         getAllProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchText, page]);
 
     const handleViewProduct = (id) => {
@@ -89,7 +90,7 @@ const SearchPage = () => {
                             {/* Sidebar filters */}
                             <div className="w-full md:w-64 bg-blue-100 p-3 rounded-lg shadow-md flex-shrink-0">
                                 <h2 className="text-lg font-bold mb-2">Filters</h2>
-                                {/* Add your filter options here */}
+                                
                             </div>
 
                             {/* Product list */}
