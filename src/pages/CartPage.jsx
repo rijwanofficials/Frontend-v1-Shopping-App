@@ -27,7 +27,7 @@ const CartPage = () => {
         }));
 
         navigate("/address", { state: { cart: cartData } });
-        setLoading(false); // <-- hide loader after navigation
+        setLoading(false);
     };
 
     return (

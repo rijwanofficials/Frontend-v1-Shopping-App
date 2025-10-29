@@ -36,7 +36,6 @@ const AppContextProvider = ({ children }) => {
       setAppLoading(false);
     }
   };
-  
   useEffect(() => {
       getUserLoggedIn();
   }, []);
@@ -84,7 +83,7 @@ const AppContextProvider = ({ children }) => {
       if (response.status === 200 && result.data?.cart) {
         setCart(result.data.cart);
       } else {
-        ShowErrorToast("Failed to fetch cart items!");
+       console.log("Failed to fetch cart items!");
       }
     } catch (err) {
       ShowErrorToast(`Error fetching cart: ${err.message}`);
@@ -181,9 +180,7 @@ const AppContextProvider = ({ children }) => {
       credentials: "include",
       body: JSON.stringify({ address: payload }),
     });
-
     const result = await response.json();
-
     if (response.ok) {
       ShowSuccessToast("Order placed successfully!");
       setCart([]);
@@ -198,6 +195,57 @@ const AppContextProvider = ({ children }) => {
     setPlacingOrder(false);
   }
 };
+
+
+const useFilteredProducts = ({ category, minPrice = 0, maxPrice = Infinity, page = 1, limit = 10 }) => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchFilteredProducts = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const params = {
+          category,
+          minPrice,
+          ...(maxPrice !== Infinity && { maxPrice }),
+          page,
+          limit,
+        };
+        const queryString = new URLSearchParams(params).toString();
+
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/products/filter?${queryString}`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        const result = await response.json();
+
+        if (response.ok) {
+          setProducts(result.products);
+        } else {
+          ShowErrorToast(result.message || "Failed to fetch products!");
+          setError(result.message);
+        }
+      } catch (err) {
+        ShowErrorToast(`Error fetching products: ${err.message}`);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFilteredProducts();
+  }, [category, minPrice, maxPrice, page, limit]); // 👈 Dependency array for auto-refetch
+
+  return { products, loading, error };
+}
 
   
   const handleSetUser = (data) => setUser(data);
@@ -217,6 +265,7 @@ const AppContextProvider = ({ children }) => {
     handleCheckout,
     placingOrder,
     getCartItems,
+    useFilteredProducts,
   };
   
   return (
