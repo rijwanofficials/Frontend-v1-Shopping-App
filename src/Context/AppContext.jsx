@@ -15,30 +15,37 @@ const AppContextProvider = ({ children }) => {
   const [placingOrder, setPlacingOrder] = useState(false); // for placing order
 
   // Fetch logged-in user
-  const getUserLoggedIn = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/users/me`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-      if (response.status === 200) {
-        const result = await response.json();
-        setUser({ ...result.data.user, isLoggedIn: true });
-      } else {
-        ShowErrorToast("Please log in!");
+const getUserLoggedIn = async () => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/users/me`,
+      {
+        method: "GET",
+        credentials: "include",
       }
-    } catch (err) {
-      ShowErrorToast(`Error during user validation: ${err.message}`);
-    } finally {
-      setAppLoading(false);
+    );
+    if (response.status === 200) {
+      const result = await response.json();
+      console.log("API response:", result);
+      setUser({ ...result.data.data, isLoggedIn: true });
+      
+      // If you want to see it immediately, log result.data.data
+      console.log("User info from API:", result.data.data);
+
+    } else {
+      ShowErrorToast("Please log in!");
     }
-  };
-  useEffect(() => {
-      getUserLoggedIn();
-  }, []);
+  } catch (err) {
+    ShowErrorToast(`Error during user validation: ${err.message}`);
+  } finally {
+    setAppLoading(false);
+  }
+};
+
+useEffect(() => {
+  getUserLoggedIn();
+}, []);
+
   
   useEffect(() => {
       getCartItems();
