@@ -3,9 +3,12 @@ import { ShowErrorToast, ShowSuccessToast } from "../utils/ToastMessageHelper";
 import { Link } from "react-router";
 import { Eye, EyeOff } from "lucide-react";
 import { ClipLoader } from "react-spinners";
+import { useAuthContext } from "../Context/AppContext";
 
-export default function Signup() {
-  const [sendingOtp, setSedingOtp] = useState(false);
+const SignupPage = () => {
+  const { sendOtp, signup } = useAuthContext();
+
+  const [sendingOtp, setSendingOtp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -13,62 +16,43 @@ export default function Signup() {
 
   const [otp, setOtp] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
-  const [islogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+
   const handleSentOtp = async (e) => {
     e.preventDefault();
-    try {
-      setSedingOtp(true);
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/otps`, {
-        method: "POST",
-        body: JSON.stringify({ email }),
-        headers: { "Content-Type": "application/json" },
-      });
-      if (response.status == 201) {
-        setIsOtpSent(true);
-        ShowSuccessToast("OTP Sent to the email");
-      } else {
-        const result = await response.json();
-        ShowErrorToast(result.message);
-      }
-    } catch (err) {
-      console.error("Error in handleSentOtp:", err.message);
-      ShowErrorToast(`Unable to sent OTP: ${err.message}`);
-    } finally {
-      setSedingOtp(false);
+    setSendingOtp(true);
+
+    const result = await sendOtp(email);
+    console.log("OTP API Result:", result);
+
+    if (result.isSuccess) {
+      setIsOtpSent(true);
+      ShowSuccessToast(result.message || "OTP sent");
+    } else {
+      ShowErrorToast(result.message || "Failed to send OTP");
     }
+    setSendingOtp(false);
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    try {
-      setIsSigningUp(true); // ✅ start loader
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/signup`,
-        {
-          method: "POST",
-          body: JSON.stringify({ email, otp, password }),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      if (response.status == 201) {
-        setIsOtpSent(true);
-        ShowSuccessToast("User Signup Successfully");
-        setIsLogin(true);
-      } else {
-        const result = await response.json();
-        ShowErrorToast(result.message);
-      }
-    } catch (err) {
-      console.error("Error in handleSignup:", err.message);
-      ShowErrorToast(`Unable to SignUp: ${err.message}`);
-    } finally {
-      setIsSigningUp(false); // ✅ stop loader
+    setIsSigningUp(true);
+
+    const result = await signup(email, otp, password);
+console.log(result);
+    if (result.status === 200 || result.isSuccess) {
+      ShowSuccessToast("User signed up successfully!");
+      setIsLogin(true);
+    } else {
+      ShowErrorToast(result.message || "Signup failed");
     }
+
+    setIsSigningUp(false);
   };
 
   return (
     <div className="min-h-screen flex justify-center items-center px-4 sm:px-6 lg:px-8">
-      {!islogin ? (
+      {!isLogin ? (
         <div className="bg-white/10 shadow-md rounded-lg w-full max-w-md px-6 py-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 text-blue-600">
             Create Account
@@ -80,6 +64,7 @@ export default function Signup() {
           >
             {!isOtpSent ? (
               <>
+                {/* Email */}
                 <div className="flex flex-col">
                   <label className="mb-1 text-sm sm:text-base">Email</label>
                   <input
@@ -92,6 +77,7 @@ export default function Signup() {
                   />
                 </div>
 
+                {/* Send OTP */}
                 <button
                   type="submit"
                   disabled={sendingOtp}
@@ -113,6 +99,7 @@ export default function Signup() {
               </>
             ) : (
               <>
+                {/* OTP Input */}
                 <div className="flex flex-col">
                   <label className="mb-1 text-sm sm:text-base">OTP</label>
                   <input
@@ -125,6 +112,7 @@ export default function Signup() {
                   />
                 </div>
 
+                {/* Password Input */}
                 <div className="flex flex-col relative">
                   <label className="mb-1 text-sm sm:text-base">Password</label>
                   <input
@@ -148,10 +136,11 @@ export default function Signup() {
                   </button>
                 </div>
 
+                {/* Signup */}
                 <button
                   type="submit"
                   disabled={isSigningUp}
-                  className="flex items-center justify-center text-white w-full py-2 rounded-md bg-blue-600 hover:bg-blue-500 transition text-sm sm:text-base hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center justify-center text-white w-full py-2 rounded-md bg-blue-600 hover:bg-blue-500 transition text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSigningUp ? (
                     <ClipLoader size={20} color="white" />
@@ -175,4 +164,6 @@ export default function Signup() {
       )}
     </div>
   );
-}
+};
+
+export default SignupPage;

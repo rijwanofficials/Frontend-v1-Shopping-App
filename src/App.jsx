@@ -3,7 +3,6 @@ import { HomePage } from "./pages/HomePage";
 import {SearchPage} from "./pages/SearchPage";
 import ViewPage from "./pages/ViewPage";
 import PageNotFound from "./pages/PageNotFound";
-import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import { ClipLoader } from "react-spinners";
 import { BasicLayout } from "./pages/BasicLayout";
@@ -19,6 +18,7 @@ import { MyOrders } from "./pages/MyOrders";
 import { AdminContextProvider } from "./Context/AdminContext";
 import { useAuthContext } from "./Context/AppContext";
 import AddressPage from "./pages/AddressPage";
+import SignupPage from "./pages/SignupPage";
 
 
 

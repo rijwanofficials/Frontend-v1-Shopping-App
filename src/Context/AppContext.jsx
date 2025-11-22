@@ -42,6 +42,8 @@ const getUserLoggedIn = async () => {
   }
 };
 
+
+
 useEffect(() => {
   getUserLoggedIn();
 }, []);
@@ -254,6 +256,71 @@ const useFilteredProducts = ({ category, minPrice = 0, maxPrice = Infinity, page
   return { products, loading, error };
 }
 
+const login = async (email, password) => {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+      credentials: "include", // important for cookies
+    });
+
+    const data = await res.json();
+
+    return { status: res.status, ...data };
+  } catch (error) {
+    return { status: 500, message: error.message };
+  }
+};
+
+const logout = async () => {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/logout`, {
+      method: "POST",
+      credentials: "include", // needed to clear cookies
+    });
+
+    const data = await res.json();
+
+    return { status: res.status, ...data };
+  } catch (error) {
+    return { status: 500, message: error.message };
+  }
+};
+
+const signup = async (email, otp, password) => {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp, password }),
+      credentials: "include",
+    });
+
+    const data = await res.json();
+
+    return { status: res.status, ...data };
+  } catch (error) {
+    return { status: 500, message: error.message };
+  }
+};
+
+const sendOtp = async (email) => {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/otps`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await res.json();
+    return { status: res.status, ...data };
+  } catch (error) {
+    return { status: 500, message: error.message };
+  }
+};
+
+
   
   const handleSetUser = (data) => setUser(data);
   
@@ -264,6 +331,10 @@ const useFilteredProducts = ({ category, minPrice = 0, maxPrice = Infinity, page
     handleSetUser,
     handleLogOutClick,
     cart,
+    sendOtp,
+    signup,
+    login,
+    logout,
     addtoCart,
     cartLoading,
     removeFromCart,
